@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3D0B14620D4ABF9000ECEFBC /* UniversalDetector.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D0B14610D4ABF9000ECEFBC /* UniversalDetector.framework */; };
+		3D0B14680D4ABF9C00ECEFBC /* XADMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D0B14670D4ABF9C00ECEFBC /* XADMaster.framework */; };
+		3D0B14770D4ABFDD00ECEFBC /* XADMaster.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3D0B14670D4ABF9C00ECEFBC /* XADMaster.framework */; };
+		3D0B14780D4ABFDD00ECEFBC /* UniversalDetector.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3D0B14610D4ABF9000ECEFBC /* UniversalDetector.framework */; };
+		3DC3833F0D4AB8B9005B934F /* XADMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DC3820C0D4AB286005B934F /* XADMaster.framework */; };
+		3DC383490D4AB8C9005B934F /* UniversalDetector.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DC383460D4AB8C7005B934F /* UniversalDetector.framework */; };
 		8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 29B97318FDCFA39411CA2CEA /* MainMenu.nib */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
@@ -35,7 +41,35 @@
 			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = XADMaster;
 		};
+		3DC383450D4AB8C7005B934F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3DC383400D4AB8C7005B934F /* UniversalDetector.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
+			remoteInfo = UniversalDetector;
+		};
+		3DC383470D4AB8C7005B934F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3DC383400D4AB8C7005B934F /* UniversalDetector.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1B0DDCAB0A2D0AD10009B697;
+			remoteInfo = DetectorTest;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		3D0B14820D4ABFE000ECEFBC /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				3D0B14770D4ABFDD00ECEFBC /* XADMaster.framework in CopyFiles */,
+				3D0B14780D4ABFDD00ECEFBC /* UniversalDetector.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -46,7 +80,10 @@
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		32CA4F630368D1EE00C91783 /* iTunesImport_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iTunesImport_Prefix.pch; sourceTree = "<group>"; };
+		3D0B14610D4ABF9000ECEFBC /* UniversalDetector.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UniversalDetector.framework; path = UniversalDetector/build/Release/UniversalDetector.framework; sourceTree = "<group>"; };
+		3D0B14670D4ABF9C00ECEFBC /* XADMaster.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XADMaster.framework; path = libxad/portable/mac/build/Release/XADMaster.framework; sourceTree = "<group>"; };
 		3DC381FD0D4AB286005B934F /* XADMaster.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = XADMaster.xcodeproj; path = libxad/portable/mac/XADMaster.xcodeproj; sourceTree = "<group>"; };
+		3DC383400D4AB8C7005B934F /* UniversalDetector.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = UniversalDetector.xcodeproj; path = UniversalDetector/UniversalDetector.xcodeproj; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* iTunesImport.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iTunesImport.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -57,6 +94,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
+				3DC3833F0D4AB8B9005B934F /* XADMaster.framework in Frameworks */,
+				3DC383490D4AB8C9005B934F /* UniversalDetector.framework in Frameworks */,
+				3D0B14620D4ABF9000ECEFBC /* UniversalDetector.framework in Frameworks */,
+				3D0B14680D4ABF9C00ECEFBC /* XADMaster.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -73,6 +114,8 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3D0B14670D4ABF9C00ECEFBC /* XADMaster.framework */,
+				3D0B14610D4ABF9000ECEFBC /* UniversalDetector.framework */,
 				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
 			);
 			name = "Linked Frameworks";
@@ -111,6 +154,7 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
+				3DC383400D4AB8C7005B934F /* UniversalDetector.xcodeproj */,
 				3DC381FD0D4AB286005B934F /* XADMaster.xcodeproj */,
 				32CA4F630368D1EE00C91783 /* iTunesImport_Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
@@ -146,6 +190,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		3DC383410D4AB8C7005B934F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3DC383460D4AB8C7005B934F /* UniversalDetector.framework */,
+				3DC383480D4AB8C7005B934F /* DetectorTest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -156,6 +209,7 @@
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
+				3D0B14820D4ABFE000ECEFBC /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -179,6 +233,10 @@
 			mainGroup = 29B97314FDCFA39411CA2CEA /* iTunesImport */;
 			projectDirPath = "";
 			projectReferences = (
+				{
+					ProductGroup = 3DC383410D4AB8C7005B934F /* Products */;
+					ProjectRef = 3DC383400D4AB8C7005B934F /* UniversalDetector.xcodeproj */;
+				},
 				{
 					ProductGroup = 3DC381FE0D4AB286005B934F /* Products */;
 					ProjectRef = 3DC381FD0D4AB286005B934F /* XADMaster.xcodeproj */;
@@ -204,6 +262,20 @@
 			fileType = "compiled.mach-o.executable";
 			path = XADTest;
 			remoteRef = 3DC3820D0D4AB286005B934F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		3DC383460D4AB8C7005B934F /* UniversalDetector.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = UniversalDetector.framework;
+			remoteRef = 3DC383450D4AB8C7005B934F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		3DC383480D4AB8C7005B934F /* DetectorTest */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = DetectorTest;
+			remoteRef = 3DC383470D4AB8C7005B934F /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -263,6 +335,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/libxad/portable/mac/build/Release\"",
+					"\"$(SRCROOT)/UniversalDetector/build/Release\"",
+				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
@@ -281,6 +358,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/libxad/portable/mac/build/Release\"",
+					"\"$(SRCROOT)/UniversalDetector/build/Release\"",
+				);
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = iTunesImport_Prefix.pch;
