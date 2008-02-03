@@ -18,3 +18,19 @@
 	return !err || errno != ENOENT;
 }
 @end
+
+@implementation XADArchive (FileIteration)
+-(NSArray *) allEntryNames
+{
+	int numEntries = [self numberOfEntries];
+	NSString *entries[numEntries];
+	
+	for (int i = 0; i < numEntries; i++) {
+		NSString *entry = [self nameOfEntry:i];
+		NSRange range = [entry rangeOfString:@"/"];
+		entries[i] = range.length ? [entry substringFromIndex:range.location+1] : @"";
+	}
+	
+	return [NSArray arrayWithObjects:entries count:numEntries];
+}
+@end

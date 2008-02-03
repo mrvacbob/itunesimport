@@ -7,6 +7,7 @@
 //
 
 #import "IIAssistantController.h"
+#import "IIAlbum.h"
 #import "Utilities.h"
 
 @implementation IIAssistantController
@@ -27,17 +28,25 @@
 - (void)chooseAlbumPanelDidEnd:(NSOpenPanel *)panel returnCode:(int)returnCode contextInfo:(void*)contextInfo
 {
 	[chooseAlbumField setStringValue:[panel filename]]; 
+	[self albumChosen:self];
 }
 
 - (IBAction)albumChosen:(id)sender
 {
 	NSString *name = [chooseAlbumField stringValue];
 	
-	if (![name isValidFilename]) goto bad;
+	if ([name isValidFilename]) {
+		[self validateAlbum:name];
+	}
+}
+
+- (void)validateAlbum:(in NSString*)name
+{
+	[parsingProgressIndicator performSelectorOnMainThread:@selector(startAnimation:) withObject:self waitUntilDone:NO];
+	IIAlbum *album = GetAlbumForFileSource(GetFileSourceForPath(name));
+	NSString *desc = [album description];
 	
-	[nextButton setEnabled:YES];
-	return;
-bad:
-	[nextButton setEnabled:NO];
+	[albumTypeLabel setStringValue:desc ? desc : @"none?"];
+	[parsingProgressIndicator performSelectorOnMainThread:@selector(stopAnimation:) withObject:self waitUntilDone:NO];
 }
 @end

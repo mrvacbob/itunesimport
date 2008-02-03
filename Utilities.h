@@ -7,7 +7,12 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import <XADMaster/XADArchive.h>
 
 @interface NSString (IIAdditions)
 -(BOOL) isValidFilename;
+@end
+
+@interface XADArchive (FileIteration)
+-(NSArray*) allEntryNames;
 @end

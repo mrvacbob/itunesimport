@@ -7,12 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3D0300C40D516DC400C3B7A3 /* IIAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D0300C30D516DC400C3B7A3 /* IIAlbum.m */; };
 		3D0B14620D4ABF9000ECEFBC /* UniversalDetector.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D0B14610D4ABF9000ECEFBC /* UniversalDetector.framework */; };
 		3D0B14680D4ABF9C00ECEFBC /* XADMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D0B14670D4ABF9C00ECEFBC /* XADMaster.framework */; };
 		3D0B14770D4ABFDD00ECEFBC /* XADMaster.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3D0B14670D4ABF9C00ECEFBC /* XADMaster.framework */; };
 		3D0B14780D4ABFDD00ECEFBC /* UniversalDetector.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3D0B14610D4ABF9000ECEFBC /* UniversalDetector.framework */; };
 		3D0B14A90D4ADB3200ECEFBC /* IIAssistantController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D0B14A80D4ADB3200ECEFBC /* IIAssistantController.m */; };
 		3D0B14E80D4AE84700ECEFBC /* Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D0B14E70D4AE84700ECEFBC /* Utilities.m */; };
+		3D0B154F0D4B0B0A00ECEFBC /* IIFileSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D0B154E0D4B0B0A00ECEFBC /* IIFileSource.m */; };
 		3DC3833F0D4AB8B9005B934F /* XADMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DC3820C0D4AB286005B934F /* XADMaster.framework */; };
 		3DC383490D4AB8C9005B934F /* UniversalDetector.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DC383460D4AB8C7005B934F /* UniversalDetector.framework */; };
 		8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 29B97318FDCFA39411CA2CEA /* MainMenu.nib */; };
@@ -20,6 +22,21 @@
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXBuildRule section */
+		3D4A90210D55A5620099E796 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*.c.rl *.cpp.rl *.cp.rl *.cxx.rl *.m.rl *.mm.rl";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE)",
+				"$(DERIVED_FILES_DIR)/$(INPUT_FILE_BASE).dot",
+			);
+			script = "RAGEL=${PROJECT_DIR}/ragel\nRLCODEGEN=${PROJECT_DIR}/rlgen-cd\n${RAGEL} ${INPUT_FILE_PATH} | ${RLCODEGEN} -T0 -o ${DERIVED_FILES_DIR}/${INPUT_FILE_BASE}\n";
+		};
+/* End PBXBuildRule section */
 
 /* Begin PBXContainerItemProxy section */
 		3DC3820B0D4AB286005B934F /* PBXContainerItemProxy */ = {
@@ -82,12 +99,18 @@
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		32CA4F630368D1EE00C91783 /* iTunesImport_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iTunesImport_Prefix.pch; sourceTree = "<group>"; };
+		3D0300C20D516DC300C3B7A3 /* IIAlbum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IIAlbum.h; sourceTree = "<group>"; };
+		3D0300C30D516DC400C3B7A3 /* IIAlbum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IIAlbum.m; sourceTree = "<group>"; };
 		3D0B14610D4ABF9000ECEFBC /* UniversalDetector.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UniversalDetector.framework; path = UniversalDetector/build/Release/UniversalDetector.framework; sourceTree = "<group>"; };
 		3D0B14670D4ABF9C00ECEFBC /* XADMaster.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XADMaster.framework; path = libxad/portable/mac/build/Release/XADMaster.framework; sourceTree = "<group>"; };
 		3D0B14A70D4ADB3200ECEFBC /* IIAssistantController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IIAssistantController.h; sourceTree = "<group>"; };
 		3D0B14A80D4ADB3200ECEFBC /* IIAssistantController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IIAssistantController.m; sourceTree = "<group>"; };
 		3D0B14E60D4AE84700ECEFBC /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utilities.h; sourceTree = "<group>"; };
 		3D0B14E70D4AE84700ECEFBC /* Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utilities.m; sourceTree = "<group>"; };
+		3D0B154D0D4B0B0A00ECEFBC /* IIFileSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IIFileSource.h; sourceTree = "<group>"; };
+		3D0B154E0D4B0B0A00ECEFBC /* IIFileSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IIFileSource.m; sourceTree = "<group>"; };
+		3D4A8FF30D5590F80099E796 /* CueParsing.m.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CueParsing.m.h; sourceTree = "<group>"; };
+		3D4A8FF40D5590F80099E796 /* CueParsing.m.rl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CueParsing.m.rl; sourceTree = "<group>"; };
 		3DC381FD0D4AB286005B934F /* XADMaster.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = XADMaster.xcodeproj; path = libxad/portable/mac/XADMaster.xcodeproj; sourceTree = "<group>"; };
 		3DC383400D4AB8C7005B934F /* UniversalDetector.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = UniversalDetector.xcodeproj; path = UniversalDetector/UniversalDetector.xcodeproj; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -115,6 +138,12 @@
 			children = (
 				3D0B14A70D4ADB3200ECEFBC /* IIAssistantController.h */,
 				3D0B14A80D4ADB3200ECEFBC /* IIAssistantController.m */,
+				3D0B154D0D4B0B0A00ECEFBC /* IIFileSource.h */,
+				3D0B154E0D4B0B0A00ECEFBC /* IIFileSource.m */,
+				3D0300C20D516DC300C3B7A3 /* IIAlbum.h */,
+				3D0300C30D516DC400C3B7A3 /* IIAlbum.m */,
+				3D4A8FF30D5590F80099E796 /* CueParsing.m.h */,
+				3D4A8FF40D5590F80099E796 /* CueParsing.m.rl */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -222,6 +251,7 @@
 				3D0B14820D4ABFE000ECEFBC /* CopyFiles */,
 			);
 			buildRules = (
+				3D4A90210D55A5620099E796 /* PBXBuildRule */,
 			);
 			dependencies = (
 				3DC382190D4AB2CF005B934F /* PBXTargetDependency */,
@@ -310,6 +340,8 @@
 				8D11072D0486CEB800E47090 /* main.m in Sources */,
 				3D0B14A90D4ADB3200ECEFBC /* IIAssistantController.m in Sources */,
 				3D0B14E80D4AE84700ECEFBC /* Utilities.m in Sources */,
+				3D0B154F0D4B0B0A00ECEFBC /* IIFileSource.m in Sources */,
+				3D0300C40D516DC400C3B7A3 /* IIAlbum.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -388,6 +420,7 @@
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
@@ -402,6 +435,7 @@
 					ppc,
 					i386,
 				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;

@@ -7,6 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+//#import "IIAlbum.h"
 
 @interface IIAssistantController : NSObject {
 	IBOutlet NSWindow *assistantWindow;
@@ -15,10 +16,13 @@
 
     IBOutlet NSTextField *chooseAlbumField;
 	IBOutlet NSTextField *albumTypeLabel;
+	
+	IBOutlet NSProgressIndicator *parsingProgressIndicator;
 }
 - (IBAction)advance:(id)sender;
 
 - (IBAction)chooseAlbum:(id)sender;
 - (void)chooseAlbumPanelDidEnd:(NSOpenPanel *)panel returnCode:(int)returnCode contextInfo:(void*)contextInfo;
 - (IBAction)albumChosen:(id)sender;
+- (void)validateAlbum:(in NSString*)name;
 @end
