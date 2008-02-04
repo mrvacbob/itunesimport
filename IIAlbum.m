@@ -7,6 +7,8 @@
 //
 
 #import "IIAlbum.h"
+#import "CueParsing.h"
+#import "Utilities.h"
 
 @implementation IIAlbum
 - (id)initWithFileSource:(IIFileSource *)fs {return nil;}
@@ -22,7 +24,10 @@
 @end
 
 @interface IICuesheetAlbum : IIAlbum {
+	NSDictionary *cueDict;
 }
+
+- (void)findBestCuesheet;
 @end
 
 @implementation IIPrerippedAlbum
@@ -36,9 +41,9 @@
 	return self;
 }
 
--(unsigned) trackCount {return [fileNames count];}
--(NSArray*) trackNames {return fileNames;}
--(BOOL) isValid {return YES;}
+- (unsigned)trackCount {return [fileNames count];}
+- (NSArray*)trackNames {return fileNames;}
+- (BOOL)isValid {return YES;}
 @end
 
 @implementation IICuesheetAlbum
@@ -47,11 +52,19 @@
 	if (self = [super init]) {
 		fileSource = [fs retain];
 		fileNames = [[fs filesWithExtension:@".cue" atTopLevel:YES] retain];
+		[self findBestCuesheet];
 	}
 	
 	return self;
 }
 
+-(void) findBestCuesheet
+{	
+	for (NSString *cueName in fileNames) {
+		NSDictionary *dict = ParseCuesheet(STGetStringWithUnknownEncodingFromData([fileSource dataFromFile:cueName], NULL));
+		NSLog(@"cue \"%@\": %@", cueName, dict);
+	}
+}
 @end
 
 enum {

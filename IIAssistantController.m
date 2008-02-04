@@ -45,7 +45,7 @@
 	[parsingProgressIndicator performSelectorOnMainThread:@selector(startAnimation:) withObject:self waitUntilDone:NO];
 	IIAlbum *album = GetAlbumForFileSource(GetFileSourceForPath(name));
 	NSString *desc = [album description];
-	
+
 	[albumTypeLabel setStringValue:desc ? desc : @"none?"];
 	[parsingProgressIndicator performSelectorOnMainThread:@selector(stopAnimation:) withObject:self waitUntilDone:NO];
 }

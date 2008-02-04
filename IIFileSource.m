@@ -26,7 +26,8 @@ static NSArray *FilterExtensions(NSArray *files, NSString *ext, BOOL topLevel)
 	}
 	
 	NSArray *ret = [files objectsAtIndexes:is];
-	
+	//NSLog(@"FE in: %@", files);
+	//NSLog(@"FE for \"%@\": %@", ext, ret);
 	return ret;
 }
 
@@ -104,7 +105,7 @@ static NSArray *FilterExtensions(NSArray *files, NSString *ext, BOOL topLevel)
 
 -(NSData*)dataFromFile:(NSString*)path
 {
-	return [xad contentsOfEntry:[archiveNames indexOfObjectIdenticalTo:path]];
+	return [xad contentsOfEntry:[archiveNames indexOfObject:path]];
 }
 @end
 

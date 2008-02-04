@@ -15,6 +15,7 @@
 		3D0B14A90D4ADB3200ECEFBC /* IIAssistantController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D0B14A80D4ADB3200ECEFBC /* IIAssistantController.m */; };
 		3D0B14E80D4AE84700ECEFBC /* Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D0B14E70D4AE84700ECEFBC /* Utilities.m */; };
 		3D0B154F0D4B0B0A00ECEFBC /* IIFileSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D0B154E0D4B0B0A00ECEFBC /* IIFileSource.m */; };
+		3D4A904C0D5652A80099E796 /* CueParsing.m.rl in Sources */ = {isa = PBXBuildFile; fileRef = 3D4A8FF40D5590F80099E796 /* CueParsing.m.rl */; };
 		3DC3833F0D4AB8B9005B934F /* XADMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DC3820C0D4AB286005B934F /* XADMaster.framework */; };
 		3DC383490D4AB8C9005B934F /* UniversalDetector.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DC383460D4AB8C7005B934F /* UniversalDetector.framework */; };
 		8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 29B97318FDCFA39411CA2CEA /* MainMenu.nib */; };
@@ -109,8 +110,8 @@
 		3D0B14E70D4AE84700ECEFBC /* Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utilities.m; sourceTree = "<group>"; };
 		3D0B154D0D4B0B0A00ECEFBC /* IIFileSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IIFileSource.h; sourceTree = "<group>"; };
 		3D0B154E0D4B0B0A00ECEFBC /* IIFileSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IIFileSource.m; sourceTree = "<group>"; };
-		3D4A8FF30D5590F80099E796 /* CueParsing.m.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CueParsing.m.h; sourceTree = "<group>"; };
-		3D4A8FF40D5590F80099E796 /* CueParsing.m.rl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CueParsing.m.rl; sourceTree = "<group>"; };
+		3D4A8FF30D5590F80099E796 /* CueParsing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CueParsing.h; sourceTree = "<group>"; };
+		3D4A8FF40D5590F80099E796 /* CueParsing.m.rl */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; path = CueParsing.m.rl; sourceTree = "<group>"; };
 		3DC381FD0D4AB286005B934F /* XADMaster.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = XADMaster.xcodeproj; path = libxad/portable/mac/XADMaster.xcodeproj; sourceTree = "<group>"; };
 		3DC383400D4AB8C7005B934F /* UniversalDetector.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = UniversalDetector.xcodeproj; path = UniversalDetector/UniversalDetector.xcodeproj; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -142,7 +143,7 @@
 				3D0B154E0D4B0B0A00ECEFBC /* IIFileSource.m */,
 				3D0300C20D516DC300C3B7A3 /* IIAlbum.h */,
 				3D0300C30D516DC400C3B7A3 /* IIAlbum.m */,
-				3D4A8FF30D5590F80099E796 /* CueParsing.m.h */,
+				3D4A8FF30D5590F80099E796 /* CueParsing.h */,
 				3D4A8FF40D5590F80099E796 /* CueParsing.m.rl */,
 			);
 			name = Classes;
@@ -342,6 +343,7 @@
 				3D0B14E80D4AE84700ECEFBC /* Utilities.m in Sources */,
 				3D0B154F0D4B0B0A00ECEFBC /* IIFileSource.m in Sources */,
 				3D0300C40D516DC400C3B7A3 /* IIAlbum.m in Sources */,
+				3D4A904C0D5652A80099E796 /* CueParsing.m.rl in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

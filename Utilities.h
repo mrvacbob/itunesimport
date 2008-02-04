@@ -16,3 +16,7 @@
 @interface XADArchive (FileIteration)
 -(NSArray*) allEntryNames;
 @end
+
+extern NSMutableString *STStandardizeStringNewlines(NSString *str);
+extern NSString *STLoadFileWithUnknownEncoding(NSString *path);
+extern NSString *STGetStringWithUnknownEncodingFromData(NSData *data, NSStringEncoding *enc_);
