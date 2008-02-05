@@ -16,6 +16,7 @@
 - (NSArray*)filesWithExtension:(NSString*)extension atTopLevel:(BOOL)topLevel; 
 - (NSData*)dataFromFile:(NSString*)path;
 - (BOOL)isValid;
+- (BOOL)containsFile:(NSString*)path;
 @end
 
 extern IIFileSource *GetFileSourceForPath(NSString *path);

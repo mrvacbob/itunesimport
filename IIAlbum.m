@@ -25,6 +25,7 @@
 
 @interface IICuesheetAlbum : IIAlbum {
 	NSDictionary *cueDict;
+	NSArray *cueTracks;
 }
 
 - (void)findBestCuesheet;
@@ -60,10 +61,18 @@
 
 -(void) findBestCuesheet
 {	
+	NSDictionary *best=nil;
+	unsigned bestTagCount=0;
 	for (NSString *cueName in fileNames) {
 		NSDictionary *dict = ParseCuesheet(STGetStringWithUnknownEncodingFromData([fileSource dataFromFile:cueName], NULL));
-		NSLog(@"cue \"%@\": %@", cueName, dict);
+		NSString *cueWav = [dict objectForKey:@"File"];
+		if (!cueWav || ![fileSource containsFile:cueWav] || ![dict objectForKey:@"Tracks"]) continue;
+		unsigned thisTagCount = CountCuesheetTags(dict);
+		if (thisTagCount > bestTagCount) {best = dict; bestTagCount = thisTagCount;}
 	}
+	
+	cueDict = [best retain];
+	cueTracks = [cueDict objectForKey:@"Tracks"];
 }
 @end
 

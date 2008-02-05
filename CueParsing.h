@@ -10,3 +10,4 @@
 #import <Cocoa/Cocoa.h>
 
 extern NSDictionary *ParseCuesheet(NSString *cueSheet);
+extern unsigned CountCuesheetTags(NSDictionary *cue);

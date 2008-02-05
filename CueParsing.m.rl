@@ -13,6 +13,20 @@
 %%machine Cuesheet;
 %%write data;
 
+extern unsigned CountCuesheetTags(NSDictionary *cue)
+{
+	unsigned tags = 0;
+	
+	tags += [cue count];
+	NSArray *tracks = [cue objectForKey:@"Tracks"];
+	
+	for (NSDictionary *track in tracks) {
+		tags += [track count];
+	}
+	
+	return tags;
+}
+
 NSDictionary *ParseCuesheet(NSString *cueSheet)
 {
 	NSMutableDictionary *cue = [NSMutableDictionary dictionary], *track = nil;
@@ -45,6 +59,7 @@ NSDictionary *ParseCuesheet(NSString *cueSheet)
 		}
 		action addtrackval {
 			val = send();
+			NSLog(@"track val: %@", val);
 			[track setObject:[val stringByReplacingOccurrencesOfString:@"\"" withString:@""] forKey:key];
 		}
 		action setnum {str = send(); num = [str intValue];}
@@ -58,22 +73,22 @@ NSDictionary *ParseCuesheet(NSString *cueSheet)
 			[track setObject:val forKey:[NSString stringWithFormat:@"Index %0.2d", num]];
 		}
 		
-		nl = ("\n" | "\r" | "\r\n");
+		nl = "\n";
 		str = any*;
 		wschar = space | 0xa0;
-		ws = wschar*;
+		ws = wschar+;
 		nonws = any - wschar;
 		bom = 0xfeff;
 		num = ('-'? [0-9]+) >sstart %setnum;
 		
 		topkey = "GENRE" | "DATE" | "DISCID" | "COMMENT" | "PERFORMER" | "TITLE"  | "SONGWRITER" | "FILE";
-		value = ("\""  :> str :> "\"") | (nonws+);
-		topsetting = topkey >sstart %setkey ws value >sstart %addval (ws str)?;
-		toplevel = (ws "REM"? ws topsetting :> nl)*;
+		value = (("\"" [^\"]* "\"") | ((any - (wschar|"\""|nl))+));
+		topsetting = topkey >sstart %setkey ws value >sstart %addval (ws? str)?;
+		toplevel = (ws? "REM"? ws? topsetting :> nl)*;
 		
-		tracknum = ws "TRACK" ws num ws "AUDIO" nl;
+		tracknum = ws? "TRACK" ws num ws "AUDIO" ws? nl;
 		trackkey = "TITLE" | "PERFORMER" | "SONGWRITER" | "PREGAP" | "POSTGAP";
-		tracksetting = ws ((trackkey >sstart %setkey ws (value >sstart %addtrackval)) | ("INDEX" >sstart %setkey ws num ws value >sstart %addtrackindex));
+		tracksetting = (ws? ((trackkey >sstart %setkey ws value >sstart %addtrackval) | ("INDEX" >sstart %setkey ws num ws value >sstart %addtrackindex)) (ws? str)?) :> nl;
 		track = tracknum %newtrack :> tracksetting*;
 		tracks = track*;
 		

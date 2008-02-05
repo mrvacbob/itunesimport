@@ -17,6 +17,12 @@
 	[assistantTabView selectNextTabViewItem:self];
 }
 
+- (void)awakeFromNib
+{
+	parsingThread = nil;
+	album = nil;
+}
+
 #pragma mark -- Album Choice
 - (IBAction)chooseAlbum:(id)sender {
     NSOpenPanel *panel = [NSOpenPanel openPanel];
@@ -31,22 +37,35 @@
 	[self albumChosen:self];
 }
 
+- (void)validateAlbumOnThread
+{
+	if ([parsingThread isExecuting]) [parsingThread cancel];
+	if (parsingThread) [parsingThread release];
+	parsingThread = [[NSThread alloc] initWithTarget:self selector:@selector(validateAlbum) object:nil];
+	
+	[parsingThread start];
+}
+
 - (IBAction)albumChosen:(id)sender
 {
 	NSString *name = [chooseAlbumField stringValue];
 	
 	if ([name isValidFilename]) {
-		[self validateAlbum:name];
+		[self validateAlbumOnThread];
 	}
 }
 
-- (void)validateAlbum:(in NSString*)name
+- (void)validateAlbum
 {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	[parsingProgressIndicator performSelectorOnMainThread:@selector(startAnimation:) withObject:self waitUntilDone:NO];
-	IIAlbum *album = GetAlbumForFileSource(GetFileSourceForPath(name));
+	if (album) [album release];
+	album = [GetAlbumForFileSource(GetFileSourceForPath([chooseAlbumField stringValue])) retain];
 	NSString *desc = [album description];
 
-	[albumTypeLabel setStringValue:desc ? desc : @"none?"];
+	[albumTypeLabel performSelectorOnMainThread:@selector(setStringValue:) withObject:desc?desc:@"none?" waitUntilDone:NO];
+	[nextButton setEnabled:desc ? YES : NO];
 	[parsingProgressIndicator performSelectorOnMainThread:@selector(stopAnimation:) withObject:self waitUntilDone:NO];
+	[pool release];
 }
 @end

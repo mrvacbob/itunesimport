@@ -36,6 +36,7 @@ static NSArray *FilterExtensions(NSArray *files, NSString *ext, BOOL topLevel)
 -(NSArray*)filesWithExtension:(NSString*)extension atTopLevel:(BOOL)topLevel {return nil;}
 -(NSData*)dataFromFile:(NSString*)path {return nil;}
 -(BOOL) isValid {return NO;}
+-(BOOL)containsFile:(NSString*)path {return NO;}
 @end
 
 @interface IIXADFileSource : IIFileSource {
@@ -76,6 +77,13 @@ static NSArray *FilterExtensions(NSArray *files, NSString *ext, BOOL topLevel)
 	return FilterExtensions(topLevel ? (contents ? contents : (contents = [[manager contentsOfDirectoryAtPath:baseName error:nil] retain])) : (allSubpaths ? allSubpaths : (allSubpaths = [[manager subpathsOfDirectoryAtPath:baseName error:nil] retain])), extension, NO);
 }
 
+-(BOOL)containsFile:(NSString*)path
+{
+	struct stat st;
+	
+	return stat([[baseName stringByAppendingPathComponent:path] UTF8String], &st) != -1;
+}
+
 -(NSData*)dataFromFile:(NSString*)path
 {
 	return [NSData dataWithContentsOfMappedFile:[baseName stringByAppendingPathComponent:path]];
@@ -103,9 +111,16 @@ static NSArray *FilterExtensions(NSArray *files, NSString *ext, BOOL topLevel)
 	return FilterExtensions([xad allEntryNames], extension, topLevel);
 }
 
+-(BOOL)containsFile:(NSString*)path
+{
+	return [archiveNames containsObject:path];
+}
+
 -(NSData*)dataFromFile:(NSString*)path
 {
-	return [xad contentsOfEntry:[archiveNames indexOfObject:path]];
+	int idx = [archiveNames indexOfObject:path];
+
+	return (idx != INT_MAX) ? [xad contentsOfEntry:idx] : nil;
 }
 @end
 
