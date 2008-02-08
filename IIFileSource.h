@@ -14,6 +14,7 @@
 
 - (id)initWithFile:(NSString*)file;
 - (NSArray*)filesWithExtension:(NSString*)extension atTopLevel:(BOOL)topLevel; 
+- (NSString*)pathToFile:(NSString*)filename;
 - (NSData*)dataFromFile:(NSString*)path;
 - (BOOL)isValid;
 - (BOOL)containsFile:(NSString*)path;

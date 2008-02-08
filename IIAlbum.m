@@ -7,6 +7,7 @@
 //
 
 #import "IIAlbum.h"
+#import "TagParsing.h"
 #import "CueParsing.h"
 #import "Utilities.h"
 
@@ -18,9 +19,13 @@
 @end
 
 @interface IIPrerippedAlbum : IIAlbum {
+	NSDictionary *albumDict;
+	NSArray *tracks;
+	BOOL unicode;
 }
 
 - (id)initWithFileSource:(IIFileSource *)fs extension:(NSString *)ext lossless:(BOOL)lossless;
+- (void)getAlbumTags;
 @end
 
 @interface IICuesheetAlbum : IIAlbum {
@@ -37,9 +42,23 @@
 	if (self = [super init]) {
 		fileSource = [fs retain];
 		fileNames = [[fs filesWithExtension:ext atTopLevel:YES] retain];
+		unicode = ![ext isEqualToString:@".mp3"];
+		[self getAlbumTags];
 	}
 	
 	return self;
+}
+
+- (void)getAlbumTags
+{
+	NSMutableArray *fullPaths = [NSMutableArray array];
+	
+	for (NSString *filename in fileNames) {
+		[fullPaths addObject:[fileSource pathToFile:filename]];
+	}
+	
+	albumDict = ParseAlbumTrackTags(fullPaths, unicode);
+	NSLog(@"%@", albumDict);
 }
 
 - (unsigned)trackCount {return [fileNames count];}

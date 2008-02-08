@@ -19,6 +19,12 @@
 	
 	IBOutlet NSProgressIndicator *parsingProgressIndicator;
 	
+	// --
+	
+	IBOutlet NSTextField *albumArtistField;
+	IBOutlet NSTextField *albumTitleField;
+	IBOutlet NSTextField *albumComposerField;
+
 	NSThread *parsingThread;
 	IIAlbum *album;
 }

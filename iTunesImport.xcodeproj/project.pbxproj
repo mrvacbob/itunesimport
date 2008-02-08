@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		3D0300C40D516DC400C3B7A3 /* IIAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D0300C30D516DC400C3B7A3 /* IIAlbum.m */; };
+		3D03FE710D57F24E008C8194 /* Taglib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D03FE700D57F24E008C8194 /* Taglib.framework */; };
+		3D03FEAD0D57F2AB008C8194 /* Taglib.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3D03FE700D57F24E008C8194 /* Taglib.framework */; };
 		3D0B14620D4ABF9000ECEFBC /* UniversalDetector.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D0B14610D4ABF9000ECEFBC /* UniversalDetector.framework */; };
 		3D0B14680D4ABF9C00ECEFBC /* XADMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D0B14670D4ABF9C00ECEFBC /* XADMaster.framework */; };
 		3D0B14770D4ABFDD00ECEFBC /* XADMaster.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3D0B14670D4ABF9C00ECEFBC /* XADMaster.framework */; };
@@ -15,6 +17,7 @@
 		3D0B14A90D4ADB3200ECEFBC /* IIAssistantController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D0B14A80D4ADB3200ECEFBC /* IIAssistantController.m */; };
 		3D0B14E80D4AE84700ECEFBC /* Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D0B14E70D4AE84700ECEFBC /* Utilities.m */; };
 		3D0B154F0D4B0B0A00ECEFBC /* IIFileSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D0B154E0D4B0B0A00ECEFBC /* IIFileSource.m */; };
+		3D0E83AA0D5ACBC300789FCD /* TagParsing.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3D0E83A90D5ACBC300789FCD /* TagParsing.mm */; };
 		3D4A904C0D5652A80099E796 /* CueParsing.m.rl in Sources */ = {isa = PBXBuildFile; fileRef = 3D4A8FF40D5590F80099E796 /* CueParsing.m.rl */; };
 		3DC3833F0D4AB8B9005B934F /* XADMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DC3820C0D4AB286005B934F /* XADMaster.framework */; };
 		3DC383490D4AB8C9005B934F /* UniversalDetector.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DC383460D4AB8C7005B934F /* UniversalDetector.framework */; };
@@ -84,6 +87,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				3D03FEAD0D57F2AB008C8194 /* Taglib.framework in CopyFiles */,
 				3D0B14770D4ABFDD00ECEFBC /* XADMaster.framework in CopyFiles */,
 				3D0B14780D4ABFDD00ECEFBC /* UniversalDetector.framework in CopyFiles */,
 			);
@@ -102,6 +106,7 @@
 		32CA4F630368D1EE00C91783 /* iTunesImport_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iTunesImport_Prefix.pch; sourceTree = "<group>"; };
 		3D0300C20D516DC300C3B7A3 /* IIAlbum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IIAlbum.h; sourceTree = "<group>"; };
 		3D0300C30D516DC400C3B7A3 /* IIAlbum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IIAlbum.m; sourceTree = "<group>"; };
+		3D03FE700D57F24E008C8194 /* Taglib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Taglib.framework; path = taglib/Taglib.framework; sourceTree = "<group>"; };
 		3D0B14610D4ABF9000ECEFBC /* UniversalDetector.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UniversalDetector.framework; path = UniversalDetector/build/Release/UniversalDetector.framework; sourceTree = "<group>"; };
 		3D0B14670D4ABF9C00ECEFBC /* XADMaster.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XADMaster.framework; path = libxad/portable/mac/build/Release/XADMaster.framework; sourceTree = "<group>"; };
 		3D0B14A70D4ADB3200ECEFBC /* IIAssistantController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IIAssistantController.h; sourceTree = "<group>"; };
@@ -110,6 +115,8 @@
 		3D0B14E70D4AE84700ECEFBC /* Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utilities.m; sourceTree = "<group>"; };
 		3D0B154D0D4B0B0A00ECEFBC /* IIFileSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IIFileSource.h; sourceTree = "<group>"; };
 		3D0B154E0D4B0B0A00ECEFBC /* IIFileSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IIFileSource.m; sourceTree = "<group>"; };
+		3D0E83A80D5ACBC300789FCD /* TagParsing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagParsing.h; sourceTree = "<group>"; };
+		3D0E83A90D5ACBC300789FCD /* TagParsing.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TagParsing.mm; sourceTree = "<group>"; };
 		3D4A8FF30D5590F80099E796 /* CueParsing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CueParsing.h; sourceTree = "<group>"; };
 		3D4A8FF40D5590F80099E796 /* CueParsing.m.rl */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; path = CueParsing.m.rl; sourceTree = "<group>"; };
 		3DC381FD0D4AB286005B934F /* XADMaster.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = XADMaster.xcodeproj; path = libxad/portable/mac/XADMaster.xcodeproj; sourceTree = "<group>"; };
@@ -128,6 +135,7 @@
 				3DC383490D4AB8C9005B934F /* UniversalDetector.framework in Frameworks */,
 				3D0B14620D4ABF9000ECEFBC /* UniversalDetector.framework in Frameworks */,
 				3D0B14680D4ABF9C00ECEFBC /* XADMaster.framework in Frameworks */,
+				3D03FE710D57F24E008C8194 /* Taglib.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -145,6 +153,8 @@
 				3D0300C30D516DC400C3B7A3 /* IIAlbum.m */,
 				3D4A8FF30D5590F80099E796 /* CueParsing.h */,
 				3D4A8FF40D5590F80099E796 /* CueParsing.m.rl */,
+				3D0E83A80D5ACBC300789FCD /* TagParsing.h */,
+				3D0E83A90D5ACBC300789FCD /* TagParsing.mm */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -152,6 +162,7 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3D03FE700D57F24E008C8194 /* Taglib.framework */,
 				3D0B14670D4ABF9C00ECEFBC /* XADMaster.framework */,
 				3D0B14610D4ABF9000ECEFBC /* UniversalDetector.framework */,
 				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
@@ -344,6 +355,7 @@
 				3D0B154F0D4B0B0A00ECEFBC /* IIFileSource.m in Sources */,
 				3D0300C40D516DC400C3B7A3 /* IIAlbum.m in Sources */,
 				3D4A904C0D5652A80099E796 /* CueParsing.m.rl in Sources */,
+				3D0E83AA0D5ACBC300789FCD /* TagParsing.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -385,6 +397,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/libxad/portable/mac/build/Release\"",
 					"\"$(SRCROOT)/UniversalDetector/build/Release\"",
+					"\"$(SRCROOT)/taglib\"",
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -408,6 +421,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/libxad/portable/mac/build/Release\"",
 					"\"$(SRCROOT)/UniversalDetector/build/Release\"",
+					"\"$(SRCROOT)/taglib\"",
 				);
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -422,9 +436,11 @@
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = taglib/Taglib.framework/Headers/;
 				PREBINDING = NO;
 				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
 			};
@@ -433,6 +449,7 @@
 		C01FCF5008A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = (
 					ppc,
 					i386,
@@ -440,6 +457,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = taglib/Taglib.framework/Headers/;
 				PREBINDING = NO;
 				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
 			};

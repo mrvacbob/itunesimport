@@ -34,6 +34,7 @@ static NSArray *FilterExtensions(NSArray *files, NSString *ext, BOOL topLevel)
 @implementation IIFileSource
 -(id)initWithFile:(NSString*)file {return nil;}
 -(NSArray*)filesWithExtension:(NSString*)extension atTopLevel:(BOOL)topLevel {return nil;}
+-(NSString*)pathToFile:(NSString*)filename {return nil;}
 -(NSData*)dataFromFile:(NSString*)path {return nil;}
 -(BOOL) isValid {return NO;}
 -(BOOL)containsFile:(NSString*)path {return NO;}
@@ -43,6 +44,7 @@ static NSArray *FilterExtensions(NSArray *files, NSString *ext, BOOL topLevel)
 	XADArchive *xad;
 	XADError error;
 	NSArray *archiveNames;
+	NSMutableArray *temporaryFilePaths;
 }
 @end
 
@@ -84,6 +86,11 @@ static NSArray *FilterExtensions(NSArray *files, NSString *ext, BOOL topLevel)
 	return stat([[baseName stringByAppendingPathComponent:path] UTF8String], &st) != -1;
 }
 
+-(NSString*)pathToFile:(NSString*)filename
+{
+	return [baseName stringByAppendingPathComponent:filename];
+}
+
 -(NSData*)dataFromFile:(NSString*)path
 {
 	return [NSData dataWithContentsOfMappedFile:[baseName stringByAppendingPathComponent:path]];
@@ -96,6 +103,7 @@ static NSArray *FilterExtensions(NSArray *files, NSString *ext, BOOL topLevel)
 	if (self = [super init]) {
 		xad = [[XADArchive alloc] initWithFile:file delegate:self error:&error];
 		archiveNames = [[xad allEntryNames] retain];
+		temporaryFilePaths = [[NSMutableArray alloc] init];
 	}
 	
 	return self;
@@ -114,6 +122,22 @@ static NSArray *FilterExtensions(NSArray *files, NSString *ext, BOOL topLevel)
 -(BOOL)containsFile:(NSString*)path
 {
 	return [archiveNames containsObject:path];
+}
+
+-(NSString*)pathToFile:(NSString*)filename
+{
+	NSString *tempPath = NSTemporaryDirectory();
+	NSString *archiveTempDir = [tempPath stringByAppendingPathComponent:[xad filename]];
+	
+	int idx = [archiveNames indexOfObject:filename];
+
+	if (idx != INT_MAX) [xad extractEntry:idx to:archiveTempDir];
+	
+	NSString *tempFile = [archiveTempDir stringByAppendingPathComponent:[xad nameOfEntry:idx]];
+	
+	[temporaryFilePaths addObject:tempFile];
+	
+	return tempFile;
 }
 
 -(NSData*)dataFromFile:(NSString*)path

@@ -17,6 +17,14 @@
 -(NSArray*) allEntryNames;
 @end
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern NSMutableString *STStandardizeStringNewlines(NSString *str);
 extern NSString *STLoadFileWithUnknownEncoding(NSString *path);
 extern NSString *STGetStringWithUnknownEncodingFromData(NSData *data, NSStringEncoding *enc_);
+
+#ifdef __cplusplus
+};
+#endif
