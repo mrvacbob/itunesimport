@@ -13,7 +13,7 @@
 %%machine Cuesheet;
 %%write data;
 
-extern unsigned CountCuesheetTags(NSDictionary *cue)
+unsigned CountCuesheetTags(NSDictionary *cue)
 {
 	unsigned tags = 0;
 	

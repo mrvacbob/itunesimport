@@ -15,12 +15,18 @@
 {
 	[nextButton setEnabled:NO];
 	[assistantTabView selectNextTabViewItem:self];
+	
+	if ([assistantTabView indexOfTabViewItem:[assistantTabView selectedTabViewItem]] == 1) {
+		if (!albumTags) {albumTags = [album tags]; [self setAlbumFields];}
+	}
 }
 
 - (void)awakeFromNib
 {
 	parsingThread = nil;
 	album = nil;
+	albumTags = nil;
+	[assistantWindow setTitle:@"iTunes Importer"];
 }
 
 #pragma mark -- Album Choice
@@ -67,5 +73,37 @@
 	[nextButton setEnabled:desc ? YES : NO];
 	[parsingProgressIndicator performSelectorOnMainThread:@selector(stopAnimation:) withObject:self waitUntilDone:NO];
 	[pool release];
+}
+
+#pragma mark -- Tag Editing
+
+- (void)setAlbumFields
+{
+#define set(tfield, field) if (albumTags->field) [tfield setStringValue:albumTags->field];
+
+	set(albumArtistField, artist);
+	set(albumTitleField, title);
+	set(albumComposerField, composer);
+	set(albumGenreField, genre);
+	if (albumTags->year) [albumYearField setIntValue:albumTags->year];
+}
+
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
+{
+	return [album trackCount];
+}
+
+- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
+{	
+	TrackTags *tt = [albumTags->tracks objectAtIndex:row];
+	NSString *c = [tableColumn identifier];
+	
+	if ([c isEqualToString:@"Number"]) return [NSNumber numberWithUnsignedInt:tt->num];
+	else if ([c isEqualToString:@"Title"]) return tt->title;
+	else if ([c isEqualToString:@"Artist"]) return tt->artist;
+	else if ([c isEqualToString:@"Composer"]) return tt->composer;
+	else if ([c isEqualToString:@"Genre"]) return tt->genre;
+
+	return tt->title;
 }
 @end

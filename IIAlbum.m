@@ -11,16 +11,69 @@
 #import "CueParsing.h"
 #import "Utilities.h"
 
+static NSInteger TrackOrderComparison(id a_, id b_, void *context)
+{
+	TrackTags *a = a_, *b = b_;
+	
+	if (a->num && !b->num) return NSOrderedDescending;
+	if (!a->num && b->num) return NSOrderedAscending;
+	
+	if (a->num > b->num) return NSOrderedDescending;
+	if (b->num > a->num) return NSOrderedAscending;
+	
+	if (!a->internalName) return NSOrderedAscending;
+	if (!b->internalName) return NSOrderedDescending;
+	
+	return [a->internalName compare:b->internalName options:NSNumericSearch|NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch|NSWidthInsensitiveSearch|NSForcedOrderingSearch];
+}
+
+static void CanonicalizeTags(AlbumTags *tags)
+{
+	// fixup track numbers
+	[tags->tracks sortUsingFunction:TrackOrderComparison context:nil];
+	
+	NSUInteger i, count = [tags->tracks count];
+	for (i = 0; i < count; i++) {
+		TrackTags *tt = [tags->tracks objectAtIndex:i];
+		tt->num = i+1;
+	}
+}
+
+@implementation TrackTags
+-(id) init
+{
+	if (self = [super init]) {
+		tid=num=year=0;
+		title=artist=composer=genre=comment=nil;
+	}
+	
+	return self;
+}
+@end
+
+@implementation AlbumTags
+-(id) init
+{
+	if (self = [super init]) {
+		title=artist=composer=genre=comment=nil;
+		year=0;
+		tracks=nil;
+	}
+	
+	return self;
+}
+@end
+
 @implementation IIAlbum
 - (id)initWithFileSource:(IIFileSource *)fs {return nil;}
-- (unsigned)trackCount {return 0;}
+- (unsigned)trackCount {return [tags->tracks count];}
 - (NSArray*)trackNames {return nil;}
--(BOOL) isValid {return NO;}
+- (BOOL) isValid {return NO;}
+- (AlbumTags*)tags {return tags;}
+- (NSString*)pathToTrackWithTags:(int)track shouldReencode:(BOOL *)reencode {return nil;}
 @end
 
 @interface IIPrerippedAlbum : IIAlbum {
-	NSDictionary *albumDict;
-	NSArray *tracks;
 	BOOL unicode;
 }
 
@@ -30,7 +83,6 @@
 
 @interface IICuesheetAlbum : IIAlbum {
 	NSDictionary *cueDict;
-	NSArray *cueTracks;
 }
 
 - (void)findBestCuesheet;
@@ -57,11 +109,10 @@
 		[fullPaths addObject:[fileSource pathToFile:filename]];
 	}
 	
-	albumDict = ParseAlbumTrackTags(fullPaths, unicode);
-	NSLog(@"%@", albumDict);
+	tags = ParseAlbumTrackTags(fullPaths, unicode);
+	CanonicalizeTags(tags);
 }
 
-- (unsigned)trackCount {return [fileNames count];}
 - (NSArray*)trackNames {return fileNames;}
 - (BOOL)isValid {return YES;}
 @end
@@ -91,7 +142,51 @@
 	}
 	
 	cueDict = [best retain];
-	cueTracks = [cueDict objectForKey:@"Tracks"];
+	
+	tags = [[AlbumTags alloc] init];
+	NSMutableArray *trackarray = [[NSMutableArray array] retain];
+	
+#define set(name, field) tags->field = [[cueDict objectForKey:@"" # name] retain];
+#define seti(name, field) tags->field = [[cueDict objectForKey:@"" # name] intValue];
+	
+	seti(Year, year);
+	set(Title, title);
+	set(Performer, artist);
+	set(Songwriter, composer);
+	set(Genre, genre);
+	NSMutableString *com = [NSMutableString string];
+	NSString *discid, *cuecom;
+	discid = [cueDict objectForKey:@"Discid"];
+	cuecom = [cueDict objectForKey:@"Comment"];
+
+	if (discid) {[com appendFormat:@"%@\n", discid];}
+	if (cuecom) [com appendString:cuecom];
+	
+	tags->comment = [com retain];
+	
+#undef set
+#undef seti
+	
+	for (NSDictionary *track in [cueDict objectForKey:@"Tracks"]) {
+		TrackTags *tracktags = [[[TrackTags alloc] init] autorelease];
+		
+#define set(name, field) tracktags->field = [[track objectForKey:@"" # name] retain];
+#define seti(name, field) tracktags->field = [[track objectForKey:@"" # name] intValue];
+		
+		seti(Track, tid);
+		tracktags->num = tracktags->tid;
+		seti(Year, year);
+		set(Title, title);
+		set(Performer, artist);
+		set(Songwriter, composer);
+		set(Genre, genre);
+		
+		tracktags->internalName = [tracktags->title retain];
+		[trackarray addObject:tracktags];
+	}
+	
+	tags->tracks = trackarray;
+	CanonicalizeTags(tags);
 }
 @end
 

@@ -7,12 +7,13 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "IIAlbum.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 	
-extern NSDictionary *ParseAlbumTrackTags(NSArray *trackFiles, BOOL unicode);
+extern AlbumTags *ParseAlbumTrackTags(NSArray *trackFiles, BOOL unicode);
 
 #ifdef __cplusplus
 };

@@ -8,6 +8,7 @@
 
 #import "TagParsing.h"
 #import "Utilities.h"
+#import "IIAlbum.h"
 #import <Taglib/fileref.h>
 #import <Taglib/tag.h>
 /*
@@ -45,13 +46,46 @@ static NSDictionary *GetRawTrackTags(NSString *track, BOOL unicode)
 	
 	if (tag->year()) [ret setValue:[NSNumber numberWithUnsignedInt:tag->year()] forKey:@"Year"];	
 	if (tag->track()) [ret setValue:[NSNumber numberWithUnsignedInt:tag->track()] forKey:@"Track"];
+	
+	[ret setValue:track forKey:@"Filename"];
 
 	return ret;
 }
 
-NSDictionary *ParseAlbumTrackTags(NSArray *trackFiles, BOOL unicode)
+static AlbumTags *AlbumTagsFromParsedFields(NSArray *tracks)
 {
-	NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+	AlbumTags *a = [[AlbumTags alloc] init];
+	
+#define set(name, field) t->field = [[track objectForKey:@"" # name] retain];
+#define seti(name, field) t->field = [[track objectForKey:@"" # name] intValue];
+	
+	NSMutableArray *tracktags = [[NSMutableArray alloc] init];
+	
+	int i, len = [tracks count];
+	for (i = 0; i < len; i++) {
+		NSDictionary *track = [tracks objectAtIndex:i];
+		TrackTags *t = [[[TrackTags alloc] init] autorelease];
+		
+		t->tid = i;
+		seti(Track, num);
+		seti(Year, year);
+		set(Title, title);
+		set(Artist, artist);
+		set(Composer, composer);
+		set(Genre, genre);
+		set(Comment, comment);
+		set(Filename, internalName);
+		
+		[tracktags addObject:t];
+	}
+	
+	a->tracks = tracktags;
+	
+	return a;
+}
+
+AlbumTags *ParseAlbumTrackTags(NSArray *trackFiles, BOOL unicode)
+{
 	NSMutableArray *rawTags = [NSMutableArray array], *tracks = [NSMutableArray array];
 	NSCharacterSet *ws = [NSCharacterSet whitespaceCharacterSet];
 	
@@ -83,8 +117,6 @@ NSDictionary *ParseAlbumTrackTags(NSArray *trackFiles, BOOL unicode)
 		}
 		[tracks addObject:newTrack];
 	}
-	
-	[dict setObject:tracks forKey:@"Tracks"];
-	
-	return dict;
+		
+	return AlbumTagsFromParsedFields(tracks);
 }

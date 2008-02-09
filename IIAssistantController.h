@@ -24,9 +24,14 @@
 	IBOutlet NSTextField *albumArtistField;
 	IBOutlet NSTextField *albumTitleField;
 	IBOutlet NSTextField *albumComposerField;
+	IBOutlet NSTextField *albumYearField;
+	IBOutlet NSTextField *albumGenreField;
+	IBOutlet NSTableView *albumTrackTable;
 
 	NSThread *parsingThread;
+
 	IIAlbum *album;
+	AlbumTags *albumTags;
 }
 - (IBAction)advance:(id)sender;
 
@@ -34,4 +39,6 @@
 - (void)chooseAlbumPanelDidEnd:(NSOpenPanel *)panel returnCode:(int)returnCode contextInfo:(void*)contextInfo;
 - (IBAction)albumChosen:(id)sender;
 - (void)validateAlbum;
+
+- (void)setAlbumFields;
 @end
