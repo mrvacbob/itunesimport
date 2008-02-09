@@ -37,6 +37,18 @@ static void CanonicalizeTags(AlbumTags *tags)
 		TrackTags *tt = [tags->tracks objectAtIndex:i];
 		tt->num = i+1;
 	}
+	
+	id last;
+	
+#define SamenessFilter(field) \
+	last = ((TrackTags*)[tags->tracks objectAtIndex:0])->field; \
+	for (i = 1; i < count; i++) if (![((TrackTags*)[tags->tracks objectAtIndex:i])->field isEqual:last]) break; \
+	if (i == count) tags->field = [last retain]; \
+	for (TrackTags *tt in tags->tracks) {if ([tt->field isEqualToString:tags->field]) {[tt->field release]; tt->field = nil;}}
+	
+	SamenessFilter(artist);
+	SamenessFilter(genre);
+	SamenessFilter(composer);
 }
 
 @implementation TrackTags

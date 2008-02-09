@@ -27,6 +27,7 @@
 	album = nil;
 	albumTags = nil;
 	[assistantWindow setTitle:@"iTunes Importer"];
+	[albumTrackTable setColumnAutoresizingStyle:NSTableViewReverseSequentialColumnAutoresizingStyle];
 }
 
 #pragma mark -- Album Choice
@@ -104,6 +105,6 @@
 	else if ([c isEqualToString:@"Composer"]) return tt->composer;
 	else if ([c isEqualToString:@"Genre"]) return tt->genre;
 
-	return tt->title;
+	return nil;
 }
 @end
