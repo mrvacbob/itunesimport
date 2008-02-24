@@ -9,6 +9,7 @@
 #import "IIAssistantController.h"
 #import "IIAlbum.h"
 #import "Utilities.h"
+#import "iTunesApplication.h"
 
 @implementation IIAssistantController
 - (IBAction)advance:(id)sender
@@ -28,8 +29,10 @@
             [self gatherAlbumTags];
 			[imageChoiceView setDataSource:self];
             [self loadAlbumImages];
-            //[nextButton setEnabled:YES];
+            [nextButton setEnabled:YES];
 			break;
+        case 3:
+            [self importIntoiTunes];
 	}
 }
 
@@ -112,14 +115,13 @@
 	get(albumComposerField, composer);
 	get(albumGenreField, genre);
     albumTags->year = [albumYearField intValue];
+    [album recanonicalizeTags];
 }
 
 #pragma mark -- Image Choice
 
 - (void)loadAlbumImages
 {
-    if ([imagesThread isExecuting]) [imagesThread cancel];
-    if (imagesThread) [imagesThread release];
     imagesThread = [[NSThread alloc] initWithTarget:self selector:@selector(loadAlbumImagesThread) object:nil];
     
     [imagesThread start];
@@ -160,5 +162,59 @@
 
     if ([is count] == 0) [curImageView setImage:nil];
     else [curImageView setImage:[imageArray objectAtIndex:[is firstIndex]]];
+}
+
+#pragma mark -- Import
+
+- (void)importIntoiTunes
+{
+    iTunesImportThread = [[NSThread alloc] initWithTarget:self selector:@selector(iTunesImportThread) object:nil];
+    
+    [iTunesImportThread start];
+}
+
+- (void)iTunesImportThread
+{
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    iTunesApplication *iTunes = [SBApplication applicationWithBundleIdentifier:@"com.apple.iTunes"];
+    NSMutableArray *ittracks = [NSMutableArray array];
+    @try {
+    [progressIndicator performSelectorOnMainThread:@selector(startAnimation:) withObject:self waitUntilDone:NO];
+	[iTunes setDelegate:self];
+    
+   // BOOL reencode = [album shouldReencode];
+    //iTunesUserPlaylist *dbgPlaylist = [[[[iTunes sources] objectAtIndex:0] userPlaylists] objectWithName:@"itt"];
+    NSImage *artwork = [curImageView image];
+    
+    for (TrackTags *tr in albumTags->tracks) {
+        NSString *path = [album pathToTrackWithID:tr->tid];
+        iTunesTrack *nt = [iTunes add:[NSArray arrayWithObject:[NSURL fileURLWithPath:path isDirectory:NO]] to:nil];
+        [ittracks addObject:nt];
+        NSLog(@"track art \"%@\" album \"%@\"", tr->artist, albumTags->artist);
+        nt.album = albumTags->title;
+        if ([tr->artist length] && [albumTags->artist length]) {
+            nt.albumArtist = albumTags->artist;
+            nt.artist = tr->artist;
+        } else nt.artist = [tr->artist length]?tr->artist:albumTags->artist;
+        
+        if ([tr->comment length]) nt.comment = tr->comment;
+        
+        nt.composer = [tr->composer length] ? tr->composer : albumTags->composer;
+        nt.discCount = nt.discNumber = 1;
+        nt.genre = [tr->genre length] ? tr->genre : albumTags->genre;
+        nt.name = tr->title;
+        nt.trackNumber = tr->num;
+        nt.trackCount = [albumTags->tracks count];
+        if (tr->year) nt.year = tr->year;
+        
+        if (artwork) [[nt artworks] addObject:artwork];
+    }
+    
+    } @catch (NSException *e) {
+        NSRunAlertPanel(@":(", @"ScriptingBridge sucks:\n%@", @":(", nil, nil, [e reason]);
+    } @finally {
+        [progressIndicator performSelectorOnMainThread:@selector(stopAnimation:) withObject:self waitUntilDone:NO];
+    }
+	[pool release];
 }
 @end

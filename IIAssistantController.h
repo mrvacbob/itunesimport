@@ -42,6 +42,10 @@
     NSMutableArray *imageNameArray;
 	NSMutableArray *imageArray;
 	NSThread *imagesThread;
+    
+    // --
+    
+    NSThread *iTunesImportThread;
 }
 - (IBAction)advance:(id)sender;
 
@@ -55,4 +59,7 @@
 
 - (void)loadAlbumImages;
 - (void)loadAlbumImagesThread;
+
+- (void)importIntoiTunes;
+- (void)iTunesImportThread;
 @end

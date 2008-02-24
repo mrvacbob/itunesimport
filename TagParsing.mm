@@ -75,6 +75,7 @@ static AlbumTags *AlbumTagsFromParsedFields(NSArray *tracks)
 		set(Genre, genre);
 		set(Comment, comment);
 		set(Filename, internalName);
+        a->title = [[track objectForKey:@"Album"] retain];
 		
 		[tracktags addObject:t];
 	}

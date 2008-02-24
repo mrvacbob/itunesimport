@@ -19,6 +19,7 @@
 		3D0B154F0D4B0B0A00ECEFBC /* IIFileSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D0B154E0D4B0B0A00ECEFBC /* IIFileSource.m */; };
 		3D0E83AA0D5ACBC300789FCD /* TagParsing.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3D0E83A90D5ACBC300789FCD /* TagParsing.mm */; };
 		3D4A904C0D5652A80099E796 /* CueParsing.m.rl in Sources */ = {isa = PBXBuildFile; fileRef = 3D4A8FF40D5590F80099E796 /* CueParsing.m.rl */; };
+		3D7D43400D710F3600D42333 /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D7D433F0D710F3600D42333 /* ScriptingBridge.framework */; };
 		3DBBC5CB0D612B1C003046C3 /* ImageKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DBBC5CA0D612B1C003046C3 /* ImageKit.framework */; };
 		3DC3833F0D4AB8B9005B934F /* XADMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DC3820C0D4AB286005B934F /* XADMaster.framework */; };
 		3DC383490D4AB8C9005B934F /* UniversalDetector.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DC383460D4AB8C7005B934F /* UniversalDetector.framework */; };
@@ -120,6 +121,8 @@
 		3D0E83A90D5ACBC300789FCD /* TagParsing.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TagParsing.mm; sourceTree = "<group>"; };
 		3D4A8FF30D5590F80099E796 /* CueParsing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CueParsing.h; sourceTree = "<group>"; };
 		3D4A8FF40D5590F80099E796 /* CueParsing.m.rl */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; path = CueParsing.m.rl; sourceTree = "<group>"; };
+		3D7D430B0D710BCC00D42333 /* iTunesApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iTunesApplication.h; sourceTree = "<group>"; };
+		3D7D433F0D710F3600D42333 /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = /System/Library/Frameworks/ScriptingBridge.framework; sourceTree = "<absolute>"; };
 		3DBBC5CA0D612B1C003046C3 /* ImageKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageKit.framework; path = /System/Library/Frameworks/Quartz.framework/Versions/A/Frameworks/ImageKit.framework; sourceTree = "<absolute>"; };
 		3DC381FD0D4AB286005B934F /* XADMaster.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = XADMaster.xcodeproj; path = libxad/portable/mac/XADMaster.xcodeproj; sourceTree = "<group>"; };
 		3DC383400D4AB8C7005B934F /* UniversalDetector.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = UniversalDetector.xcodeproj; path = UniversalDetector/UniversalDetector.xcodeproj; sourceTree = "<group>"; };
@@ -139,6 +142,7 @@
 				3D0B14680D4ABF9C00ECEFBC /* XADMaster.framework in Frameworks */,
 				3D03FE710D57F24E008C8194 /* Taglib.framework in Frameworks */,
 				3DBBC5CB0D612B1C003046C3 /* ImageKit.framework in Frameworks */,
+				3D7D43400D710F3600D42333 /* ScriptingBridge.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -165,6 +169,7 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3D7D433F0D710F3600D42333 /* ScriptingBridge.framework */,
 				3DBBC5CA0D612B1C003046C3 /* ImageKit.framework */,
 				3D03FE700D57F24E008C8194 /* Taglib.framework */,
 				3D0B14670D4ABF9C00ECEFBC /* XADMaster.framework */,
@@ -210,6 +215,7 @@
 				3DC383400D4AB8C7005B934F /* UniversalDetector.xcodeproj */,
 				3DC381FD0D4AB286005B934F /* XADMaster.xcodeproj */,
 				32CA4F630368D1EE00C91783 /* iTunesImport_Prefix.pch */,
+				3D7D430B0D710BCC00D42333 /* iTunesApplication.h */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
 				3D0B14E60D4AE84700ECEFBC /* Utilities.h */,
 				3D0B14E70D4AE84700ECEFBC /* Utilities.m */,

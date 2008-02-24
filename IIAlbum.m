@@ -115,12 +115,18 @@ static void CanonicalizeTags(AlbumTags *tags, IIAlbum *album)
 - (NSArray*)trackNames {return nil;}
 - (BOOL) isValid {return NO;}
 - (AlbumTags*)tags {return tags;}
-- (NSString*)pathToTrackWithTags:(int)track shouldReencode:(BOOL *)reencode {return nil;}
+- (NSString*)pathToTrackWithID:(int)track {return nil;}
 - (IIFileSource*)fileSource {return fileSource;}
+- (BOOL)shouldReencode {return NO;}
+
+- (void)recanonicalizeTags
+{
+    CanonicalizeTags(tags, self);
+}
 @end
 
 @interface IIPrerippedAlbum : IIAlbum {
-	BOOL unicode;
+	BOOL unicode, lossless;
 }
 
 - (id)initWithFileSource:(IIFileSource *)fs extension:(NSString *)ext lossless:(BOOL)lossless;
@@ -135,12 +141,13 @@ static void CanonicalizeTags(AlbumTags *tags, IIAlbum *album)
 @end
 
 @implementation IIPrerippedAlbum
-- (id)initWithFileSource:(IIFileSource *)fs extension:(NSString *)ext lossless:(BOOL)lossless
+- (id)initWithFileSource:(IIFileSource *)fs extension:(NSString *)ext lossless:(BOOL)lossless_
 {
 	if (self = [super init]) {
 		fileSource = [fs retain];
 		fileNames = [[fs filesWithExtension:ext atTopLevel:YES] retain];
 		unicode = ![ext isEqualToString:@".mp3"];
+        lossless = lossless_;
 		[self getAlbumTags];
 	}
 	
@@ -156,11 +163,17 @@ static void CanonicalizeTags(AlbumTags *tags, IIAlbum *album)
 	}
 	
 	tags = ParseAlbumTrackTags(fullPaths, unicode);
-	CanonicalizeTags(tags, self);
+    [self recanonicalizeTags];
 }
 
 - (NSArray*)trackNames {return fileNames;}
 - (BOOL)isValid {return YES;}
+
+- (BOOL)shouldReencode {return lossless;}
+
+- (NSString*)pathToTrackWithID:(int)track {
+    return [fileSource pathToFile:[fileNames objectAtIndex:track]];
+}
 @end
 
 @implementation IICuesheetAlbum
@@ -232,8 +245,10 @@ static void CanonicalizeTags(AlbumTags *tags, IIAlbum *album)
 	}
 	
 	tags->tracks = trackarray;
-	CanonicalizeTags(tags, self);
+	[self recanonicalizeTags];
 }
+
+- (BOOL)shouldReencode {return YES;}
 @end
 
 enum {
