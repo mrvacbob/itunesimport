@@ -38,6 +38,7 @@ static NSArray *FilterExtensions(NSArray *files, NSString *ext, BOOL topLevel)
 -(NSData*)dataFromFile:(NSString*)path {return nil;}
 -(BOOL) isValid {return NO;}
 -(BOOL)containsFile:(NSString*)path {return NO;}
+-(NSString*)fileSourceName {return nil;}
 @end
 
 @interface IIXADFileSource : IIFileSource {
@@ -95,6 +96,11 @@ static NSArray *FilterExtensions(NSArray *files, NSString *ext, BOOL topLevel)
 {
 	return [NSData dataWithContentsOfMappedFile:[baseName stringByAppendingPathComponent:path]];
 }
+
+-(NSString*)fileSourceName
+{
+    return baseName;
+}
 @end
 
 @implementation IIXADFileSource
@@ -145,6 +151,11 @@ static NSArray *FilterExtensions(NSArray *files, NSString *ext, BOOL topLevel)
 	int idx = [archiveNames indexOfObject:path];
 
 	return (idx != INT_MAX) ? [xad contentsOfEntry:idx] : nil;
+}
+
+-(NSString*)fileSourceName
+{
+    return [xad filename];
 }
 @end
 

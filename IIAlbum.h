@@ -37,6 +37,7 @@
 - (AlbumTags*)tags;
 - (BOOL)isValid;
 - (NSString*)pathToTrackWithTags:(int)track shouldReencode:(BOOL *)reencode;
+- (IIFileSource*)fileSource;
 @end
 
 extern IIAlbum *GetAlbumForFileSource(IIFileSource *fs);

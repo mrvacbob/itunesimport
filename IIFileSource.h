@@ -18,6 +18,7 @@
 - (NSData*)dataFromFile:(NSString*)path;
 - (BOOL)isValid;
 - (BOOL)containsFile:(NSString*)path;
+- (NSString*)fileSourceName;
 @end
 
 extern IIFileSource *GetFileSourceForPath(NSString *path);

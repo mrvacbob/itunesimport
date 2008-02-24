@@ -16,8 +16,20 @@
 	[nextButton setEnabled:NO];
 	[assistantTabView selectNextTabViewItem:self];
 	
-	if ([assistantTabView indexOfTabViewItem:[assistantTabView selectedTabViewItem]] == 1) {
-		if (!albumTags) {albumTags = [album tags]; [self setAlbumFields];}
+	int nextTab = [assistantTabView indexOfTabViewItem:[assistantTabView selectedTabViewItem]];
+	
+	switch (nextTab) {
+		case 1:
+			if (!albumTags) {albumTags = [album tags]; [self setAlbumFields];}
+			[albumTrackTable setDataSource:albumTags];
+			[nextButton setEnabled:YES];
+			break;
+		case 2:
+            [self gatherAlbumTags];
+			[imageChoiceView setDataSource:self];
+            [self loadAlbumImages];
+            //[nextButton setEnabled:YES];
+			break;
 	}
 }
 
@@ -28,6 +40,8 @@
 	albumTags = nil;
 	[assistantWindow setTitle:@"iTunes Importer"];
 	[albumTrackTable setColumnAutoresizingStyle:NSTableViewReverseSequentialColumnAutoresizingStyle];
+    imageNameArray = [[NSMutableArray alloc] init];
+    imageArray = [[NSMutableArray alloc] init];
 }
 
 #pragma mark -- Album Choice
@@ -48,7 +62,7 @@
 {
 	if ([parsingThread isExecuting]) [parsingThread cancel];
 	if (parsingThread) [parsingThread release];
-	parsingThread = [[NSThread alloc] initWithTarget:self selector:@selector(validateAlbum) object:nil];
+	parsingThread = [[NSThread alloc] initWithTarget:self selector:@selector(validateAlbumThread) object:nil];
 	
 	[parsingThread start];
 }
@@ -62,17 +76,17 @@
 	}
 }
 
-- (void)validateAlbum
+- (void)validateAlbumThread
 {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	[parsingProgressIndicator performSelectorOnMainThread:@selector(startAnimation:) withObject:self waitUntilDone:NO];
+	[progressIndicator performSelectorOnMainThread:@selector(startAnimation:) withObject:self waitUntilDone:NO];
 	if (album) [album release];
 	album = [GetAlbumForFileSource(GetFileSourceForPath([chooseAlbumField stringValue])) retain];
 	NSString *desc = [album description];
 
 	[albumTypeLabel performSelectorOnMainThread:@selector(setStringValue:) withObject:desc?desc:@"none?" waitUntilDone:NO];
 	[nextButton setEnabled:desc ? YES : NO];
-	[parsingProgressIndicator performSelectorOnMainThread:@selector(stopAnimation:) withObject:self waitUntilDone:NO];
+	[progressIndicator performSelectorOnMainThread:@selector(stopAnimation:) withObject:self waitUntilDone:NO];
 	[pool release];
 }
 
@@ -89,22 +103,62 @@
 	if (albumTags->year) [albumYearField setIntValue:albumTags->year];
 }
 
-- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
+- (void)gatherAlbumTags
 {
-	return [album trackCount];
+#define get(tfield, field) if (albumTags->field) [albumTags->field release]; albumTags->field = [[tfield stringValue] retain];
+    
+    get(albumArtistField, artist);
+	get(albumTitleField, title);
+	get(albumComposerField, composer);
+	get(albumGenreField, genre);
+    albumTags->year = [albumYearField intValue];
 }
 
-- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
-{	
-	TrackTags *tt = [albumTags->tracks objectAtIndex:row];
-	NSString *c = [tableColumn identifier];
-	
-	if ([c isEqualToString:@"Number"]) return [NSNumber numberWithUnsignedInt:tt->num];
-	else if ([c isEqualToString:@"Title"]) return tt->title;
-	else if ([c isEqualToString:@"Artist"]) return tt->artist;
-	else if ([c isEqualToString:@"Composer"]) return tt->composer;
-	else if ([c isEqualToString:@"Genre"]) return tt->genre;
+#pragma mark -- Image Choice
 
-	return nil;
+- (void)loadAlbumImages
+{
+    if ([imagesThread isExecuting]) [imagesThread cancel];
+    if (imagesThread) [imagesThread release];
+    imagesThread = [[NSThread alloc] initWithTarget:self selector:@selector(loadAlbumImagesThread) object:nil];
+    
+    [imagesThread start];
+}
+
+- (void)loadAlbumImagesThread
+{
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    [progressIndicator performSelectorOnMainThread:@selector(startAnimation:) withObject:self waitUntilDone:NO];
+    IIFileSource *fs = [album fileSource];
+    NSArray *imageNames = [fs filesWithExtension:@".jpg" atTopLevel:NO];
+    
+    for (NSString *imageName in imageNames) {
+        NSData *imageData = [fs dataFromFile:imageName];
+        
+        [imageNameArray addObject:imageName];
+        [imageArray addObject:[[[NSImage alloc] initWithData:imageData] autorelease]];
+        [imageChoiceView performSelectorOnMainThread:@selector(reloadData) withObject:self waitUntilDone:NO];
+    }
+    
+    [progressIndicator performSelectorOnMainThread:@selector(stopAnimation:) withObject:self waitUntilDone:NO];
+	[pool release];
+}
+
+- (NSUInteger) numberOfItemsInImageBrowser:(IKImageBrowserView *) aBrowser
+{
+	return [imageArray count];
+}
+
+- (id) imageBrowser:(IKImageBrowserView *) aBrowser itemAtIndex:(NSUInteger)index
+{
+	return [imageArray objectAtIndex:index];
+}
+
+- (void) imageBrowserSelectionDidChange:(IKImageBrowserView *) aBrowser
+{
+    NSIndexSet *is = [aBrowser selectionIndexes];
+
+    if ([is count] == 0) [curImageView setImage:nil];
+    else [curImageView setImage:[imageArray objectAtIndex:[is firstIndex]]];
 }
 @end

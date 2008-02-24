@@ -8,6 +8,7 @@
 
 #import "Utilities.h"
 #import "UniversalDetector/UniversalDetector.h"
+#import <ImageKit/ImageKit.h>
 #include <sys/stat.h>
 
 @implementation NSString (IIAdditions)
@@ -35,6 +36,23 @@
 	}
 	
 	return [NSArray arrayWithObjects:entries count:numEntries];
+}
+@end
+
+@implementation NSImage (IKImageBrowserItem)
+- (NSString *)  imageUID
+{
+    return [NSString stringWithFormat:@"%p", self];
+}
+
+- (NSString *) imageRepresentationType
+{
+    return IKImageBrowserNSImageRepresentationType;
+}
+
+- (id) imageRepresentation
+{
+    return self;
 }
 @end
 

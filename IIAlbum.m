@@ -27,7 +27,7 @@ static NSInteger TrackOrderComparison(id a_, id b_, void *context)
 	return [a->internalName compare:b->internalName options:NSNumericSearch|NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch|NSWidthInsensitiveSearch|NSForcedOrderingSearch];
 }
 
-static void CanonicalizeTags(AlbumTags *tags)
+static void CanonicalizeTags(AlbumTags *tags, IIAlbum *album)
 {
 	// fixup track numbers
 	[tags->tracks sortUsingFunction:TrackOrderComparison context:nil];
@@ -49,6 +49,8 @@ static void CanonicalizeTags(AlbumTags *tags)
 	SamenessFilter(artist);
 	SamenessFilter(genre);
 	SamenessFilter(composer);
+    
+    if (![tags->title length]) tags->title = [[[[album fileSource] fileSourceName] lastPathComponent] retain];
 }
 
 @implementation TrackTags
@@ -74,6 +76,37 @@ static void CanonicalizeTags(AlbumTags *tags)
 	
 	return self;
 }
+
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
+{
+	return [tracks count];
+}
+
+- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
+{	
+	TrackTags *tt = [tracks objectAtIndex:row];
+	NSString *c = [tableColumn identifier];
+	
+	if ([c isEqualToString:@"Number"]) return [NSNumber numberWithUnsignedInt:tt->num];
+	else if ([c isEqualToString:@"Title"]) return tt->title;
+	else if ([c isEqualToString:@"Artist"]) return tt->artist;
+	else if ([c isEqualToString:@"Composer"]) return tt->composer;
+	else if ([c isEqualToString:@"Genre"]) return tt->genre;
+	
+	return nil;
+}
+
+- (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
+{
+    TrackTags *tt = [tracks objectAtIndex:row];
+	NSString *c = [tableColumn identifier];
+
+    if ([c isEqualToString:@"Number"]) tt->num = [object intValue];
+	else if ([c isEqualToString:@"Title"]) {[tt->title release]; tt->title = [object retain];}
+	else if ([c isEqualToString:@"Artist"]) {[tt->artist release]; tt->artist = [object retain];}
+	else if ([c isEqualToString:@"Composer"]) {[tt->composer release]; tt->composer = [object retain];}
+	else if ([c isEqualToString:@"Genre"]) {[tt->genre release]; tt->genre = [object retain];}
+}
 @end
 
 @implementation IIAlbum
@@ -83,6 +116,7 @@ static void CanonicalizeTags(AlbumTags *tags)
 - (BOOL) isValid {return NO;}
 - (AlbumTags*)tags {return tags;}
 - (NSString*)pathToTrackWithTags:(int)track shouldReencode:(BOOL *)reencode {return nil;}
+- (IIFileSource*)fileSource {return fileSource;}
 @end
 
 @interface IIPrerippedAlbum : IIAlbum {
@@ -122,7 +156,7 @@ static void CanonicalizeTags(AlbumTags *tags)
 	}
 	
 	tags = ParseAlbumTrackTags(fullPaths, unicode);
-	CanonicalizeTags(tags);
+	CanonicalizeTags(tags, self);
 }
 
 - (NSArray*)trackNames {return fileNames;}
@@ -198,7 +232,7 @@ static void CanonicalizeTags(AlbumTags *tags)
 	}
 	
 	tags->tracks = trackarray;
-	CanonicalizeTags(tags);
+	CanonicalizeTags(tags, self);
 }
 @end
 
