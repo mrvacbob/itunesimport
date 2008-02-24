@@ -25,13 +25,13 @@
 			[albumTrackTable setDataSource:albumTags];
 			[nextButton setEnabled:YES];
 			break;
-		case 2:
+            case 2:
             [self gatherAlbumTags];
 			[imageChoiceView setDataSource:self];
             [self loadAlbumImages];
             [nextButton setEnabled:YES];
 			break;
-        case 3:
+            case 3:
             [self importIntoiTunes];
 	}
 }
@@ -86,7 +86,7 @@
 	if (album) [album release];
 	album = [GetAlbumForFileSource(GetFileSourceForPath([chooseAlbumField stringValue])) retain];
 	NSString *desc = [album description];
-
+    
 	[albumTypeLabel performSelectorOnMainThread:@selector(setStringValue:) withObject:desc?desc:@"none?" waitUntilDone:NO];
 	[nextButton setEnabled:desc ? YES : NO];
 	[progressIndicator performSelectorOnMainThread:@selector(stopAnimation:) withObject:self waitUntilDone:NO];
@@ -98,7 +98,7 @@
 - (void)setAlbumFields
 {
 #define set(tfield, field) if (albumTags->field) [tfield setStringValue:albumTags->field];
-
+    
 	set(albumArtistField, artist);
 	set(albumTitleField, title);
 	set(albumComposerField, composer);
@@ -159,7 +159,7 @@
 - (void) imageBrowserSelectionDidChange:(IKImageBrowserView *) aBrowser
 {
     NSIndexSet *is = [aBrowser selectionIndexes];
-
+    
     if ([is count] == 0) [curImageView setImage:nil];
     else [curImageView setImage:[imageArray objectAtIndex:[is firstIndex]]];
 }
@@ -178,43 +178,47 @@
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     iTunesApplication *iTunes = [SBApplication applicationWithBundleIdentifier:@"com.apple.iTunes"];
     NSMutableArray *ittracks = [NSMutableArray array];
-    @try {
     [progressIndicator performSelectorOnMainThread:@selector(startAnimation:) withObject:self waitUntilDone:NO];
-	[iTunes setDelegate:self];
+    [iTunes setDelegate:self];
     
-   // BOOL reencode = [album shouldReencode];
+    // BOOL reencode = [album shouldReencode];
     //iTunesUserPlaylist *dbgPlaylist = [[[[iTunes sources] objectAtIndex:0] userPlaylists] objectWithName:@"itt"];
     NSImage *artwork = [curImageView image];
     
     for (TrackTags *tr in albumTags->tracks) {
-        NSString *path = [album pathToTrackWithID:tr->tid];
-        iTunesTrack *nt = [iTunes add:[NSArray arrayWithObject:[NSURL fileURLWithPath:path isDirectory:NO]] to:nil];
-        [ittracks addObject:nt];
-        NSLog(@"track art \"%@\" album \"%@\"", tr->artist, albumTags->artist);
-        nt.album = albumTags->title;
-        if ([tr->artist length] && [albumTags->artist length]) {
-            nt.albumArtist = albumTags->artist;
-            nt.artist = tr->artist;
-        } else nt.artist = [tr->artist length]?tr->artist:albumTags->artist;
-        
-        if ([tr->comment length]) nt.comment = tr->comment;
-        
-        nt.composer = [tr->composer length] ? tr->composer : albumTags->composer;
-        nt.discCount = nt.discNumber = 1;
-        nt.genre = [tr->genre length] ? tr->genre : albumTags->genre;
-        nt.name = tr->title;
-        nt.trackNumber = tr->num;
-        nt.trackCount = [albumTags->tracks count];
-        if (tr->year) nt.year = tr->year;
-        
-        if (artwork) [[nt artworks] addObject:artwork];
+        @try {
+            NSString *path = [album pathToTrackWithID:tr->tid];
+            iTunesTrack *nt = [iTunes add:[NSArray arrayWithObject:[NSURL fileURLWithPath:path isDirectory:NO]] to:nil];
+            [ittracks addObject:nt];
+            
+            nt.album = albumTags->title;
+            if ([tr->artist length] && [albumTags->artist length]) {
+                nt.albumArtist = albumTags->artist;
+                nt.artist = tr->artist;
+            } else nt.artist = [tr->artist length]?tr->artist:albumTags->artist;
+            
+            if ([tr->comment length]) nt.comment = tr->comment;
+            
+            nt.composer = [tr->composer length] ? tr->composer : albumTags->composer;
+            nt.discCount = nt.discNumber = 1;
+            nt.genre = [tr->genre length] ? tr->genre : albumTags->genre;
+            nt.name = tr->title;
+            nt.trackNumber = tr->num;
+            nt.trackCount = [albumTags->tracks count];
+            if (tr->year) nt.year = tr->year;
+            
+            if (artwork) {
+                // iTunesArtwork *art = [[nt artworks] objectAtIndex:0];
+                //  art.data = artwork;
+            }
+            sleep(3);
+        } @catch (NSException *e) {
+            NSLog(@"ScriptingBridge errored: %@", [e reason]);
+            NSLog(@"Continuing with next track.");
+        }
     }
     
-    } @catch (NSException *e) {
-        NSRunAlertPanel(@":(", @"ScriptingBridge sucks:\n%@", @":(", nil, nil, [e reason]);
-    } @finally {
-        [progressIndicator performSelectorOnMainThread:@selector(stopAnimation:) withObject:self waitUntilDone:NO];
-    }
+    [progressIndicator performSelectorOnMainThread:@selector(stopAnimation:) withObject:self waitUntilDone:NO];
 	[pool release];
 }
 @end
