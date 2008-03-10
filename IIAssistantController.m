@@ -25,13 +25,13 @@
 			[albumTrackTable setDataSource:albumTags];
 			[nextButton setEnabled:YES];
 			break;
-            case 2:
+		case 2:
             [self gatherAlbumTags];
 			[imageChoiceView setDataSource:self];
             [self loadAlbumImages];
             [nextButton setEnabled:YES];
 			break;
-            case 3:
+		case 3:
             [self importIntoiTunes];
 	}
 }

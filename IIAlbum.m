@@ -63,6 +63,17 @@ static void CanonicalizeTags(AlbumTags *tags, IIAlbum *album)
 	
 	return self;
 }
+
+-(void) dealloc
+{
+	[title release];
+	[artist release];
+	[composer release];
+	[genre release];
+	[comment release];
+	[internalName release];
+	[super dealloc];
+}
 @end
 
 @implementation AlbumTags
@@ -75,6 +86,17 @@ static void CanonicalizeTags(AlbumTags *tags, IIAlbum *album)
 	}
 	
 	return self;
+}
+
+-(void) dealloc
+{
+	[title release];
+	[artist release];
+	[composer release];
+	[genre release];
+	[comment release];
+	[tracks release];
+	[super dealloc];
 }
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
@@ -122,6 +144,14 @@ static void CanonicalizeTags(AlbumTags *tags, IIAlbum *album)
 - (void)recanonicalizeTags
 {
     CanonicalizeTags(tags, self);
+}
+
+- (void)dealloc
+{
+	[fileSource release];
+	[fileNames release];
+	[tags release];
+	[super dealloc];
 }
 @end
 
@@ -186,6 +216,12 @@ static void CanonicalizeTags(AlbumTags *tags, IIAlbum *album)
 	}
 	
 	return self;
+}
+
+-(void) dealloc
+{
+	[cueDict release];
+	[super dealloc];
 }
 
 -(void) findBestCuesheet

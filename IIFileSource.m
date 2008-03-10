@@ -41,17 +41,17 @@ static NSArray *FilterExtensions(NSArray *files, NSString *ext, BOOL topLevel)
 -(NSString*)fileSourceName {return nil;}
 @end
 
+@interface IIFSFileSource : IIFileSource {
+	NSString *baseName;
+	NSArray *allSubpaths, *contents;
+}
+@end
+
 @interface IIXADFileSource : IIFileSource {
 	XADArchive *xad;
 	XADError error;
 	NSArray *archiveNames;
 	NSMutableArray *temporaryFilePaths;
-}
-@end
-
-@interface IIFSFileSource : IIFileSource {
-	NSString *baseName;
-	NSArray *allSubpaths, *contents;
 }
 @end
 
@@ -64,6 +64,14 @@ static NSArray *FilterExtensions(NSArray *files, NSString *ext, BOOL topLevel)
 	}
 	
 	return self;
+}
+
+-(void) dealloc
+{
+	[baseName release];
+	[allSubpaths release];
+	[contents release];
+	[super dealloc];
 }
 
 -(BOOL) isValid
@@ -113,6 +121,14 @@ static NSArray *FilterExtensions(NSArray *files, NSString *ext, BOOL topLevel)
 	}
 	
 	return self;
+}
+
+-(void) dealloc
+{
+	[xad release];
+	[archiveNames release];
+	[temporaryFilePaths release];
+	[super dealloc];
 }
 
 -(BOOL) isValid
