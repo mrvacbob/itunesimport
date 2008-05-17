@@ -70,7 +70,7 @@ NSDictionary *ParseCuesheet(NSString *cueSheet)
 		}
 		action addtrackindex {
 			val = send();
-			[track setObject:val forKey:[NSString stringWithFormat:@"Index %0.2d", num]];
+			[track setObject:val forKey:(num ? [NSString stringWithFormat:@"Index %0.2d", num] : @"Pregap")];
 		}
 		
 		nl = "\n";

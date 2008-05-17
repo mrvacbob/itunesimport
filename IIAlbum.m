@@ -10,6 +10,7 @@
 #import "TagParsing.h"
 #import "CueParsing.h"
 #import "Utilities.h"
+#import "IICueRenderer.h"
 
 static NSInteger TrackOrderComparison(id a_, id b_, void *context)
 {
@@ -134,7 +135,6 @@ static void CanonicalizeTags(AlbumTags *tags, IIAlbum *album)
 @implementation IIAlbum
 - (id)initWithFileSource:(IIFileSource *)fs {return nil;}
 - (unsigned)trackCount {return [tags->tracks count];}
-- (NSArray*)trackNames {return nil;}
 - (BOOL) isValid {return NO;}
 - (AlbumTags*)tags {return tags;}
 - (NSString*)pathToTrackWithID:(int)track {return nil;}
@@ -165,6 +165,7 @@ static void CanonicalizeTags(AlbumTags *tags, IIAlbum *album)
 
 @interface IICuesheetAlbum : IIAlbum {
 	NSDictionary *cueDict;
+	IICueRenderer *cueRenderer;
 }
 
 - (void)findBestCuesheet;
@@ -196,7 +197,6 @@ static void CanonicalizeTags(AlbumTags *tags, IIAlbum *album)
     [self recanonicalizeTags];
 }
 
-- (NSArray*)trackNames {return fileNames;}
 - (BOOL)isValid {return YES;}
 
 - (BOOL)shouldReencode {return lossless;}
@@ -213,6 +213,7 @@ static void CanonicalizeTags(AlbumTags *tags, IIAlbum *album)
 		fileSource = [fs retain];
 		fileNames = [[fs filesWithExtension:@".cue" atTopLevel:YES] retain];
 		[self findBestCuesheet];
+		cueRenderer = nil;
 	}
 	
 	return self;
@@ -221,6 +222,7 @@ static void CanonicalizeTags(AlbumTags *tags, IIAlbum *album)
 -(void) dealloc
 {
 	[cueDict release];
+	if (cueRenderer) [cueRenderer release];
 	[super dealloc];
 }
 
@@ -285,6 +287,12 @@ static void CanonicalizeTags(AlbumTags *tags, IIAlbum *album)
 }
 
 - (BOOL)shouldReencode {return YES;}
+
+- (NSString*)pathToTrackWithID:(int)track {
+	if (!cueRenderer) cueRenderer = IICueRendererForCuesheetWav(cueDict, fileSource);
+	
+	return [cueRenderer pathForTrackWithID:track];
+}
 @end
 
 enum {

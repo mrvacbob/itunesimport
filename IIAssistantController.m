@@ -136,9 +136,12 @@
     
     for (NSString *imageName in imageNames) {
         NSData *imageData = [fs dataFromFile:imageName];
-        
+		if (!imageData) continue;
+		NSImage *image = [[[NSImage alloc] initWithData:imageData] autorelease];
+        if (!image) continue;
+		
         [imageNameArray addObject:imageName];
-        [imageArray addObject:[[[NSImage alloc] initWithData:imageData] autorelease]];
+        [imageArray addObject:image];
         [imageChoiceView performSelectorOnMainThread:@selector(reloadData) withObject:self waitUntilDone:NO];
     }
     
@@ -177,47 +180,54 @@
 {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     iTunesApplication *iTunes = [SBApplication applicationWithBundleIdentifier:@"com.apple.iTunes"];
+	iTunesLibraryPlaylist *library = [[[[iTunes sources] objectAtIndex:0] libraryPlaylists] objectAtIndex:0];
     NSMutableArray *ittracks = [NSMutableArray array];
     [progressIndicator performSelectorOnMainThread:@selector(startAnimation:) withObject:self waitUntilDone:NO];
     [iTunes setDelegate:self];
     
-    // BOOL reencode = [album shouldReencode];
+    BOOL reencode = [album shouldReencode];
     //iTunesUserPlaylist *dbgPlaylist = [[[[iTunes sources] objectAtIndex:0] userPlaylists] objectWithName:@"itt"];
     NSImage *artwork = [curImageView image];
     
+#define settag(d, s) @try {nt.d = s;} @catch (NSException *e) {NSLog(@"ScriptingBridge failed setting %s for track %d", # d, tr->tid);}
+	
     for (TrackTags *tr in albumTags->tracks) {
-        @try {
-            NSString *path = [album pathToTrackWithID:tr->tid];
-            iTunesTrack *nt = [iTunes add:[NSArray arrayWithObject:[NSURL fileURLWithPath:path isDirectory:NO]] to:nil];
-            [ittracks addObject:nt];
-            
-            nt.album = albumTags->title;
-            if ([tr->artist length] && [albumTags->artist length]) {
-                nt.albumArtist = albumTags->artist;
-                nt.artist = tr->artist;
-            } else nt.artist = [tr->artist length]?tr->artist:albumTags->artist;
-            
-            if ([tr->comment length]) nt.comment = tr->comment;
-            
-            nt.composer = [tr->composer length] ? tr->composer : albumTags->composer;
-            nt.discCount = nt.discNumber = 1;
-            nt.genre = [tr->genre length] ? tr->genre : albumTags->genre;
-            nt.name = tr->title;
-            nt.trackNumber = tr->num;
-            nt.trackCount = [albumTags->tracks count];
-            if (tr->year) nt.year = tr->year;
-            
-            if (artwork) {
-                // iTunesArtwork *art = [[nt artworks] objectAtIndex:0];
-                //  art.data = artwork;
-            }
-            sleep(3);
-        } @catch (NSException *e) {
-            NSLog(@"ScriptingBridge errored: %@", [e reason]);
-            NSLog(@"Continuing with next track.");
-        }
+		NSString *path = [album pathToTrackWithID:tr->tid];
+		iTunesTrack *nt = [iTunes add:[NSArray arrayWithObject:[NSURL fileURLWithPath:path isDirectory:NO]] to:nil];
+		if (!nt) {
+			NSLog(@"iTunes didn't want to add \"%@\"", path);
+			continue;
+		}
+		[ittracks addObject:nt];
+		
+		settag(album, albumTags->title);
+		if ([tr->artist length] && [albumTags->artist length]) {
+			settag(albumArtist, albumTags->artist);
+			settag(artist, tr->artist);
+		} else settag(artist, [tr->artist length]?tr->artist:albumTags->artist);
+		
+		if ([tr->comment length]) settag(comment, tr->comment);
+		
+		settag(composer, [tr->composer length] ? tr->composer : albumTags->composer);
+		settag(discCount, 1);
+		settag(discNumber, 1);
+		settag(genre, [tr->genre length] ? tr->genre : albumTags->genre);
+		settag(name, tr->title);
+		settag(trackNumber, tr->num);
+		settag(trackCount, [albumTags->tracks count]);
+		if (tr->year) settag(year, tr->year);
+		
+		if (artwork) {
+			// iTunesArtwork *art = [[nt artworks] objectAtIndex:0];
+			//  art.data = artwork;
+		}
     }
     
+	if (reencode) {
+		[iTunes convert:ittracks];
+		for (iTunesTrack *tr in ittracks) {[[library tracks] removeObject:tr];}
+	}
+	
     [progressIndicator performSelectorOnMainThread:@selector(stopAnimation:) withObject:self waitUntilDone:NO];
 	[pool release];
 }
