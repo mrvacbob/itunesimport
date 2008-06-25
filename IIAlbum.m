@@ -28,6 +28,16 @@ static NSInteger TrackOrderComparison(id a_, id b_, void *context)
 	return [a->internalName compare:b->internalName options:NSNumericSearch|NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch|NSWidthInsensitiveSearch|NSForcedOrderingSearch];
 }
 
+static NSString *TrackNameFilter(NSString *name)
+{
+	name = [name lastPathComponent];
+	NSRange extRange = [name rangeOfString:@"." options:NSBackwardsSearch];
+	
+	if (extRange.length > 0) name = [name substringToIndex:extRange.location];
+	
+	return name;
+}
+
 static void CanonicalizeTags(AlbumTags *tags, IIAlbum *album)
 {
 	// fixup track numbers
@@ -37,6 +47,7 @@ static void CanonicalizeTags(AlbumTags *tags, IIAlbum *album)
 	for (i = 0; i < count; i++) {
 		TrackTags *tt = [tags->tracks objectAtIndex:i];
 		tt->num = i+1;
+		if (![tt->title length]) tt->title = [TrackNameFilter(tt->internalName) retain];
 	}
 	
 	id last;
@@ -185,6 +196,11 @@ static void CanonicalizeTags(AlbumTags *tags, IIAlbum *album)
 	return self;
 }
 
+-(NSString*)description
+{
+	return [NSString stringWithFormat:@"A pre-ripped album with %d files",[fileNames count]];
+}
+
 - (void)getAlbumTags
 {
 	NSMutableArray *fullPaths = [NSMutableArray array];
@@ -217,6 +233,11 @@ static void CanonicalizeTags(AlbumTags *tags, IIAlbum *album)
 	}
 	
 	return self;
+}
+
+-(NSString*)description
+{
+	return [NSString stringWithFormat:@"A cuesheet album named \"%@\" with %d tracks", [cueDict objectForKey:@"Title"], [[cueDict objectForKey:@"Tracks"] count]];
 }
 
 -(void) dealloc

@@ -113,7 +113,8 @@ AlbumTags *ParseAlbumTrackTags(NSArray *trackFiles, BOOL unicode)
 			
 			if ([val isKindOfClass:[NSData class]]) {
 				NSData *data = val;
-				[newTrack setObject:[[[[NSString alloc] initWithData:data encoding:enc] autorelease] stringByTrimmingCharactersInSet:ws] forKey:key];
+				NSString *str = [[[[NSString alloc] initWithData:data encoding:enc] autorelease] stringByTrimmingCharactersInSet:ws];
+				if (str) [newTrack setObject:str forKey:key];
 			} else [newTrack setObject:val forKey:key];
 		}
 		[tracks addObject:newTrack];

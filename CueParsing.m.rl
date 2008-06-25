@@ -99,6 +99,7 @@ NSDictionary *ParseCuesheet(NSString *cueSheet)
 	%%write exec;
 	%%write eof;
 
+	[tracks addObject:track];
 	[pool release];
 	return cue;
 }

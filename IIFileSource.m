@@ -131,7 +131,7 @@ static NSArray *FilterExtensions(NSArray *files, NSString *ext, BOOL topLevel)
 	NSFileManager *manager = [NSFileManager defaultManager];
 	
 	for (NSString *path in temporaryFilePaths) { //xxx temporary
-		//[manager removeItemAtPath:path error:nil];
+		[manager removeItemAtPath:path error:nil];
 	}
 	
 	[temporaryFilePaths release];

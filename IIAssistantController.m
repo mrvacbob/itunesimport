@@ -185,13 +185,14 @@
     [progressIndicator performSelectorOnMainThread:@selector(startAnimation:) withObject:self waitUntilDone:NO];
     [iTunes setDelegate:self];
     
-    BOOL reencode = [album shouldReencode];
+    BOOL reencode = [album shouldReencode], success;
     //iTunesUserPlaylist *dbgPlaylist = [[[[iTunes sources] objectAtIndex:0] userPlaylists] objectWithName:@"itt"];
     NSImage *artwork = [curImageView image];
     
-#define settag(d, s) @try {nt.d = s;} @catch (NSException *e) {NSLog(@"ScriptingBridge failed setting %s for track %d", # d, tr->tid);}
+#define settag(d, s) do {@try {success = true; nt.d = s;} @catch (NSException *e) {success = false; NSLog(@"ScriptingBridge failed setting %s for track %d", # d, tr->tid); sleep(2);}} while (!success);
 	
     for (TrackTags *tr in albumTags->tracks) {
+		NSLog(@"importing track %d \"%@\"",tr->tid,tr->title);
 		NSString *path = [album pathToTrackWithID:tr->tid];
 		iTunesTrack *nt = [iTunes add:[NSArray arrayWithObject:[NSURL fileURLWithPath:path isDirectory:NO]] to:nil];
 		if (!nt) {
