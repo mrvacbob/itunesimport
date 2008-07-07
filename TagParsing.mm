@@ -103,8 +103,8 @@ AlbumTags *ParseAlbumTrackTags(NSArray *trackFiles, BOOL unicode)
 		}
 	}
 	
-	NSStringEncoding enc;
-	STGetStringWithUnknownEncodingFromData(ud_buf, &enc);
+	NSStringEncoding enc = NSUTF8StringEncoding;
+	if ([ud_buf length]) STGetStringWithUnknownEncodingFromData(ud_buf, &enc);
 	
 	for (NSDictionary *track in rawTags) {
 		NSMutableDictionary *newTrack = [NSMutableDictionary dictionary];

@@ -225,8 +225,8 @@
     }
     
 	if (reencode) {
-		[iTunes convert:ittracks];
-		for (iTunesTrack *tr in ittracks) {[[library tracks] removeObject:tr];}
+		@try {[iTunes convert:ittracks];} @catch (NSException *e) {NSLog(@"ScriptingBridge an exception converting tracks."); sleep(2);}
+		for (iTunesTrack *tr in ittracks) {@try {[[library tracks] removeObject:tr];} @catch (NSException *e) {NSLog(@"ScriptingBridge threw an exception removing original track"); sleep(2);}}
 	}
 	
     [progressIndicator performSelectorOnMainThread:@selector(stopAnimation:) withObject:self waitUntilDone:NO];

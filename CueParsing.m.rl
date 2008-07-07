@@ -88,7 +88,7 @@ NSDictionary *ParseCuesheet(NSString *cueSheet)
 		
 		tracknum = ws? "TRACK" ws num ws "AUDIO" ws? nl;
 		trackkey = "TITLE" | "PERFORMER" | "SONGWRITER" | "PREGAP" | "POSTGAP";
-		tracksetting = (ws? ((trackkey >sstart %setkey ws value >sstart %addtrackval) | ("INDEX" >sstart %setkey ws num ws value >sstart %addtrackindex)) (ws? str)?) :> nl;
+		tracksetting = (ws? ((trackkey >sstart %setkey ws value >sstart %addtrackval) | ("INDEX" >sstart %setkey ws num ws value >sstart %addtrackindex)) (ws? str)? | (str)) :> nl;
 		track = tracknum %newtrack :> tracksetting*;
 		tracks = track*;
 		
@@ -99,7 +99,7 @@ NSDictionary *ParseCuesheet(NSString *cueSheet)
 	%%write exec;
 	%%write eof;
 
-	[tracks addObject:track];
+	if (track) [tracks addObject:track];
 	[pool release];
 	return cue;
 }

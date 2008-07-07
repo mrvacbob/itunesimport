@@ -124,7 +124,7 @@ NSString *STGetStringWithUnknownEncodingFromData(NSData *data, NSStringEncoding 
 	if (latin2) {
 		if (DifferentiateLatin12([data bytes], [data length])) { // seems to actually be latin1
 			enc = NSWindowsCP1252StringEncoding;
-			enc_str = @"windows-1252";
+            enc_str = @"windows-1252";
 		}
 	}
 	
