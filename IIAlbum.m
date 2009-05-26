@@ -44,6 +44,9 @@ static void CanonicalizeTags(AlbumTags *tags, IIAlbum *album)
 	[tags->tracks sortUsingFunction:TrackOrderComparison context:nil];
 	
 	NSUInteger i, count = [tags->tracks count];
+    
+    if (!count) return;
+    
 	for (i = 0; i < count; i++) {
 		TrackTags *tt = [tags->tracks objectAtIndex:i];
 		tt->num = i+1;
@@ -254,6 +257,7 @@ static void CanonicalizeTags(AlbumTags *tags, IIAlbum *album)
 	for (NSString *cueName in fileNames) {
 		NSDictionary *dict = ParseCuesheet(STGetStringWithUnknownEncodingFromData([fileSource dataFromFile:cueName], NULL));
 		NSString *cueWav = [dict objectForKey:@"File"];
+        
 		if (!cueWav || ![fileSource containsFile:cueWav] || ![dict objectForKey:@"Tracks"]) continue;
 		unsigned thisTagCount = CountCuesheetTags(dict);
 		if (thisTagCount > bestTagCount) {best = dict; bestTagCount = thisTagCount;}

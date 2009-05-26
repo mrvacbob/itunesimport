@@ -93,6 +93,34 @@
 	[pool release];
 }
 
+/*
+ 
+ -(void)setupEncodingView
+ {
+ if(!encodingview)
+ {
+ NSNib *nib=[[[NSNib alloc] initWithNibNamed:@"EncodingView" bundle:nil] autorelease];
+ [nib instantiateNibWithOwner:self topLevelObjects:nil];
+ }
+ 
+ NSImage *icon=[[NSWorkspace sharedWorkspace] iconForFile:archivename];
+ [icon setSize:[encodingicon frame].size];
+ [encodingicon setImage:icon];
+ 
+ [encodingpopup buildEncodingListMatchingBytes:name_bytes];
+ if(selected_encoding)
+ {
+ int index=[encodingpopup indexOfItemWithTag:selected_encoding];
+ if(index>=0) [encodingpopup selectItemAtIndex:index];
+ else [encodingpopup selectItemAtIndex:[encodingpopup indexOfItemWithTag:NSISOLatin1StringEncoding]];
+ }
+ 
+ [self selectEncoding:self];
+ 
+ [self setDisplayedView:encodingview];
+ }
+ 
+ */
 #pragma mark -- Tag Editing
 
 - (void)setAlbumFields
@@ -225,8 +253,8 @@
     }
     
 	if (reencode) {
-		@try {[iTunes convert:ittracks];} @catch (NSException *e) {NSLog(@"ScriptingBridge an exception converting tracks."); sleep(2);}
-		for (iTunesTrack *tr in ittracks) {@try {[[library tracks] removeObject:tr];} @catch (NSException *e) {NSLog(@"ScriptingBridge threw an exception removing original track"); sleep(2);}}
+		@try {[iTunes convert:ittracks];} @catch (NSException *e) {NSLog(@"ScriptingBridge failed converting tracks. %@"); sleep(2);}
+		for (iTunesTrack *tr in ittracks) {@try {[[library tracks] removeObject:tr];} @catch (NSException *e) {NSLog(@"ScriptingBridge failed removing original track"); sleep(2);}}
 	}
 	
     [progressIndicator performSelectorOnMainThread:@selector(stopAnimation:) withObject:self waitUntilDone:NO];

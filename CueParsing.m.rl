@@ -59,7 +59,6 @@ NSDictionary *ParseCuesheet(NSString *cueSheet)
 		}
 		action addtrackval {
 			val = send();
-			NSLog(@"track val: %@", val);
 			[track setObject:[val stringByReplacingOccurrencesOfString:@"\"" withString:@""] forKey:key];
 		}
 		action setnum {str = send(); num = [str intValue];}
@@ -70,7 +69,7 @@ NSDictionary *ParseCuesheet(NSString *cueSheet)
 		}
 		action addtrackindex {
 			val = send();
-			[track setObject:val forKey:(num ? [NSString stringWithFormat:@"Index %0.2d", num] : @"Pregap")];
+			[track setObject:val forKey:[NSString stringWithFormat:@"Index %0.2d", num]];
 		}
 		
 		nl = "\n";
@@ -81,18 +80,17 @@ NSDictionary *ParseCuesheet(NSString *cueSheet)
 		bom = 0xfeff;
 		num = ('-'? [0-9]+) >sstart %setnum;
 		
-		topkey = "GENRE" | "DATE" | "DISCID" | "COMMENT" | "PERFORMER" | "TITLE"  | "SONGWRITER" | "FILE";
-		value = (("\"" [^\"]* "\"") | ((any - (wschar|"\""|nl))+));
-		topsetting = topkey >sstart %setkey ws value >sstart %addval (ws? str)?;
+		key = "GENRE" | "DATE" | "DISCID" | "COMMENT" | "PERFORMER" | "TITLE"  | "SONGWRITER" | "FILE" | "PREGAP" | "POSTGAP" | ("REPLAYGAIN" nonws*);
+		value = (("\"" [^\"]* "\"") | ((any - (nl|"\""))+));
+		topsetting = key >sstart %setkey ws value >sstart %addval (ws? str)?;
 		toplevel = (ws? "REM"? ws? topsetting :> nl)*;
 		
 		tracknum = ws? "TRACK" ws num ws "AUDIO" ws? nl;
-		trackkey = "TITLE" | "PERFORMER" | "SONGWRITER" | "PREGAP" | "POSTGAP";
-		tracksetting = (ws? ((trackkey >sstart %setkey ws value >sstart %addtrackval) | ("INDEX" >sstart %setkey ws num ws value >sstart %addtrackindex)) (ws? str)? | (str)) :> nl;
+		tracksetting = (ws? "REM"? ws? ((key >sstart %setkey ws value >sstart %addtrackval) | ("INDEX" >sstart %setkey ws num ws value >sstart %addtrackindex)) (ws? str)? | (str)) :> nl;
 		track = tracknum %newtrack :> tracksetting*;
 		tracks = track*;
 		
-		main := bom? toplevel tracks;
+        main := bom? toplevel tracks;
 	}%%
 	
 	%%write init;
