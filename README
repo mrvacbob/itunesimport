@@ -1,5 +1,8 @@
 Given a folder with an album, it fixes up tags and adds it to iTunes.
 
+The Unarchiver (http://wakaba.c3.cx/s/apps/unarchiver.html) must be
+in /Applications to build this.
+
 =====================
 Working
 =====================
