@@ -3,7 +3,6 @@
 //  iTunesImport
 //
 //  Created by Alexander Strange on 1/25/08.
-//  Copyright __MyCompanyName__ 2008. All rights reserved.
 //
 
 #import "IIAssistantController.h"
