@@ -47,7 +47,7 @@ static void GetTrackStartLen(NSArray *tracks, UInt32 albumLen, int track, UInt32
 	endTime = endString ? ParseCuesheetTime(endString) : albumLen;
 	*len = endTime - *start;
 	
-    NSLog(@"track %d start %u len %u samples", track, *start, *len);
+    //NSLog(@"track %d start %u len %u samples", track, *start, *len);
 }
 
 static void WriteWavTo(NSString *path, short *buf, UInt32 len)
