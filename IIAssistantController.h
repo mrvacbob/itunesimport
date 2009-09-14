@@ -7,6 +7,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import <ImageKit/ImageKit.h>
+#import <ScriptingBridge/ScriptingBridge.h>
 #import "IIAlbum.h"
 
 @interface IIAssistantController : NSObject {

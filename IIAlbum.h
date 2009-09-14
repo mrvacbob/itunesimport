@@ -17,7 +17,7 @@
 }
 @end
 
-@interface AlbumTags : NSObject {
+@interface AlbumTags : NSObject <NSTableViewDataSource> {
 @public;
 	NSString *title, *artist, *composer, *genre, *comment;
 	int year;

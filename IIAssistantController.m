@@ -207,17 +207,14 @@
 {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     iTunesApplication *iTunes = [SBApplication applicationWithBundleIdentifier:@"com.apple.iTunes"];
-	iTunesLibraryPlaylist *library = [[[[iTunes sources] objectAtIndex:0] libraryPlaylists] objectAtIndex:0];
     NSMutableArray *ittracks = [NSMutableArray array];
     [progressIndicator performSelectorOnMainThread:@selector(startAnimation:) withObject:self waitUntilDone:NO];
-    [iTunes setDelegate:self];
     
     BOOL reencode = [album shouldReencode], success;
     //iTunesUserPlaylist *dbgPlaylist = [[[[iTunes sources] objectAtIndex:0] userPlaylists] objectWithName:@"itt"];
     NSImage *artwork = [curImageView image];
     
-#define settag(d, s) do {@try {success = true; nt.d = s;} @catch (NSException *e) {success = false; NSLog(@"ScriptingBridge failed setting %s for track %d", # d, tr->tid); sleep(2);}} while (!success);
-	
+#define do(act) do { @try {success=true; act;} @catch (NSException *e) {success = false; NSLog(@"'%s' failed, retrying.", #act); sleep(2);}} while (!success);
     for (TrackTags *tr in albumTags->tracks) {
 		NSLog(@"importing track %d \"%@\"",tr->tid,tr->title);
 		NSString *path = [album pathToTrackWithID:tr->tid];
@@ -228,22 +225,22 @@
 		}
 		[ittracks addObject:nt];
 		
-		settag(album, albumTags->title);
+        do(nt.album = albumTags->title);
 		if ([tr->artist length] && [albumTags->artist length]) {
-			settag(albumArtist, albumTags->artist);
-			settag(artist, tr->artist);
-		} else settag(artist, [tr->artist length]?tr->artist:albumTags->artist);
+            do(nt.albumArtist = albumTags->artist);
+            do(nt.artist = tr->artist);
+		} else do(nt.artist = [tr->artist length]?tr->artist:albumTags->artist);
 		
-		if ([tr->comment length]) settag(comment, tr->comment);
+		if ([tr->comment length]) do(nt.comment = tr->comment);
 		
-		settag(composer, [tr->composer length] ? tr->composer : albumTags->composer);
-		settag(discCount, 1);
-		settag(discNumber, 1);
-		settag(genre, [tr->genre length] ? tr->genre : albumTags->genre);
-		settag(name, tr->title);
-		settag(trackNumber, tr->num);
-		settag(trackCount, [albumTags->tracks count]);
-		if (tr->year) settag(year, tr->year);
+        do(nt.composer = [tr->composer length] ? tr->composer : albumTags->composer);
+        do(nt.discCount = 1);
+        do(nt.discNumber = 1);
+        do(nt.genre = [tr->genre length] ? tr->genre : albumTags->genre);
+        do(nt.name = tr->title);
+        do(nt.trackNumber = tr->num);
+        do(nt.trackCount = [albumTags->tracks count]);
+        if (tr->year) do(nt.year = tr->year);
 		
 		if (artwork) {
 			// iTunesArtwork *art = [[nt artworks] objectAtIndex:0];
@@ -252,8 +249,7 @@
     }
     
 	if (reencode) {
-		@try {[iTunes convert:ittracks];} @catch (NSException *e) {NSLog(@"ScriptingBridge failed converting tracks. %@"); sleep(2);}
-		for (iTunesTrack *tr in ittracks) {@try {[[library tracks] removeObject:tr];} @catch (NSException *e) {NSLog(@"ScriptingBridge failed removing original track"); sleep(2);}}
+        do([iTunes convert:ittracks]);
 	}
 	
     [progressIndicator performSelectorOnMainThread:@selector(stopAnimation:) withObject:self waitUntilDone:NO];

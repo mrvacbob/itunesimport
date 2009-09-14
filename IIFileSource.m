@@ -183,10 +183,10 @@ static NSArray *FilterExtensions(NSArray *files, NSString *ext, BOOL topLevel)
 
 IIFileSource *GetFileSourceForPath(NSString *path)
 {
-	IIFileSource *fs = [[IIFSFileSource alloc] initWithFile:path];
+	IIFileSource *fs = [[[IIFSFileSource alloc] initWithFile:path] autorelease];
 	
-	if (![fs isValid]) fs = [[IIXADFileSource alloc] initWithFile:path];
+	if (![fs isValid]) fs = [[[IIXADFileSource alloc] initWithFile:path] autorelease];
 	if (![fs isValid]) return nil;
 	
-	return [fs autorelease];
+	return fs;
 }

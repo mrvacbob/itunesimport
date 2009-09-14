@@ -157,7 +157,7 @@ static void WriteWavTo(NSString *path, short *buf, UInt32 len)
 									kQTPropertyClass_MovieAudioExtraction_Movie,
 									kQTMovieAudioExtractionMoviePropertyID_CurrentTime,
 									sizeof(t), &t);
-	//if (err) NSLog(@"upon SetProperty, err %d, err2 %d", err, GetMoviesError());
+	if (err) NSLog(@"upon SetProperty, err %d, err2 %d", err, GetMoviesError());
 	
 	AudioBufferList bufList = (AudioBufferList){1,{2,len*sizeof(SInt16)*2,buf}};
 	
@@ -165,7 +165,7 @@ static void WriteWavTo(NSString *path, short *buf, UInt32 len)
 	
 	err = MovieAudioExtractionFillBuffer(aeref, &realLen, &bufList, &flags);
 	
-	//if (err) NSLog(@"upon FillBuffer, err %d, err2 %d", err, GetMoviesError());
+	if (err) NSLog(@"upon FillBuffer, err %d, err2 %d", err, GetMoviesError());
 	
 	return realLen;
 }
