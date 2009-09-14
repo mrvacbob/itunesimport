@@ -31,6 +31,7 @@
             [nextButton setEnabled:YES];
 			break;
 		case 3:
+            [consoleView setFont:[NSFont fontWithName:@"Monaco" size:10]];
             [self importIntoiTunes];
 	}
 }
@@ -203,6 +204,21 @@
     [iTunesImportThread start];
 }
 
+- (void)_appendLineToConsole:(NSString*)line
+{
+    NSAttributedString *s = [[[NSAttributedString alloc] initWithString:line] autorelease];
+    NSAttributedString *nl = [[[NSAttributedString alloc] initWithString:@"\n"] autorelease];
+    NSTextStorage *textStorage = [consoleView textStorage];
+    
+    [textStorage appendAttributedString:s];
+    [textStorage appendAttributedString:nl];
+}
+
+- (void)appendLineToConsole:(NSString*)line
+{
+    [self performSelectorOnMainThread:@selector(_appendLineToConsole:) withObject:line waitUntilDone:NO];
+}
+
 - (void)iTunesImportThread
 {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -216,11 +232,12 @@
     
 #define do(act) do { @try {success=true; act;} @catch (NSException *e) {success = false; NSLog(@"'%s' failed, retrying.", #act); sleep(2);}} while (!success);
     for (TrackTags *tr in albumTags->tracks) {
-		NSLog(@"importing track %d \"%@\"",tr->tid,tr->title);
+        [self appendLineToConsole:[NSString stringWithFormat:@"Importing %d \"%@\"…", tr->num, tr->title]];
+
 		NSString *path = [album pathToTrackWithID:tr->tid];
 		iTunesTrack *nt = [iTunes add:[NSArray arrayWithObject:[NSURL fileURLWithPath:path isDirectory:NO]] to:nil];
 		if (!nt) {
-			NSLog(@"iTunes didn't want to add \"%@\"", path);
+            [self appendLineToConsole:[NSString stringWithFormat:@"iTunes didn't want to add \"%@\"", path]];
 			continue;
 		}
 		[ittracks addObject:nt];
@@ -241,7 +258,7 @@
         do(nt.trackNumber = tr->num);
         do(nt.trackCount = [albumTags->tracks count]);
         if (tr->year) do(nt.year = tr->year);
-		
+		        
 		if (artwork) {
 			// iTunesArtwork *art = [[nt artworks] objectAtIndex:0];
 			//  art.data = artwork;
@@ -249,8 +266,11 @@
     }
     
 	if (reencode) {
+        [self appendLineToConsole:@"Converting to AAC…"];
         do([iTunes convert:ittracks]);
 	}
+    
+    [self appendLineToConsole:@"Done."];
 	
     [progressIndicator performSelectorOnMainThread:@selector(stopAnimation:) withObject:self waitUntilDone:NO];
 	[pool release];

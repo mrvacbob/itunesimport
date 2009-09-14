@@ -45,6 +45,10 @@
     
     // --
     
+    IBOutlet NSTextView *consoleView;
+    
+    // --
+    
     NSThread *iTunesImportThread;
 }
 - (IBAction)advance:(id)sender;
