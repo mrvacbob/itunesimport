@@ -17,6 +17,7 @@
 		3D0DCB390DDEB7DA00A1660D /* QuickTimeUtils.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D0DCB370DDEB7DA00A1660D /* QuickTimeUtils.c */; };
 		3D0DCBBF0DDF5E4800A1660D /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D0DCBBE0DDF5E4800A1660D /* QuickTime.framework */; };
 		3D0E83AA0D5ACBC300789FCD /* TagParsing.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3D0E83A90D5ACBC300789FCD /* TagParsing.mm */; };
+		3D2266C2105DEF770031B730 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3D2266C0105DEF770031B730 /* MainMenu.xib */; };
 		3D2ACB710EC0EB9D00D0D43A /* UniversalDetector.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D2ACB700EC0EB9D00D0D43A /* UniversalDetector.framework */; };
 		3D2ACB750EC0EBAF00D0D43A /* XADMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D2ACB740EC0EBAF00D0D43A /* XADMaster.framework */; };
 		3D2ACBBA0EC0EE2900D0D43A /* XADMaster.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3D2ACB740EC0EBAF00D0D43A /* XADMaster.framework */; };
@@ -26,7 +27,6 @@
 		3DA2217B0EA6D62D006443F6 /* TUEncodingPopUp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DA2217A0EA6D62D006443F6 /* TUEncodingPopUp.m */; };
 		3DA221870EA6DA78006443F6 /* EncodingView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3DA221850EA6DA78006443F6 /* EncodingView.nib */; };
 		3DBBC5CB0D612B1C003046C3 /* ImageKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DBBC5CA0D612B1C003046C3 /* ImageKit.framework */; };
-		8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 29B97318FDCFA39411CA2CEA /* MainMenu.nib */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -67,7 +67,6 @@
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		29B97319FDCFA39411CA2CEA /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/MainMenu.nib; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		32CA4F630368D1EE00C91783 /* iTunesImport_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iTunesImport_Prefix.pch; sourceTree = "<group>"; };
@@ -87,6 +86,7 @@
 		3D0DCBBE0DDF5E4800A1660D /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = /System/Library/Frameworks/QuickTime.framework; sourceTree = "<absolute>"; };
 		3D0E83A80D5ACBC300789FCD /* TagParsing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagParsing.h; sourceTree = "<group>"; };
 		3D0E83A90D5ACBC300789FCD /* TagParsing.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TagParsing.mm; sourceTree = "<group>"; };
+		3D2266C1105DEF770031B730 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		3D2ACB700EC0EB9D00D0D43A /* UniversalDetector.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UniversalDetector.framework; path = "/Applications/The Unarchiver.app/Contents/Frameworks/UniversalDetector.framework"; sourceTree = "<absolute>"; };
 		3D2ACB740EC0EBAF00D0D43A /* XADMaster.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XADMaster.framework; path = "/Applications/The Unarchiver.app/Contents/Frameworks/XADMaster.framework"; sourceTree = "<absolute>"; };
 		3D4A8FF30D5590F80099E796 /* CueParsing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CueParsing.h; sourceTree = "<group>"; };
@@ -203,8 +203,8 @@
 			children = (
 				3DA221850EA6DA78006443F6 /* EncodingView.nib */,
 				8D1107310486CEB800E47090 /* Info.plist */,
+				3D2266C0105DEF770031B730 /* MainMenu.xib */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
-				29B97318FDCFA39411CA2CEA /* MainMenu.nib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -263,9 +263,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */,
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				3DA221870EA6DA78006443F6 /* EncodingView.nib in Resources */,
+				3D2266C2105DEF770031B730 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -300,12 +300,12 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		29B97318FDCFA39411CA2CEA /* MainMenu.nib */ = {
+		3D2266C0105DEF770031B730 /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				29B97319FDCFA39411CA2CEA /* English */,
+				3D2266C1105DEF770031B730 /* English */,
 			);
-			name = MainMenu.nib;
+			name = MainMenu.xib;
 			sourceTree = "<group>";
 		};
 		3DA221850EA6DA78006443F6 /* EncodingView.nib */ = {
