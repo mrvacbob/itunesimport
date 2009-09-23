@@ -21,6 +21,7 @@
 @public;
 	NSString *title, *artist, *composer, *genre, *comment;
 	int year;
+    BOOL hasAlbumArtist;
 	NSMutableArray *tracks;
 }
 @end

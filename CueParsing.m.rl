@@ -79,7 +79,7 @@ NSDictionary *ParseCuesheet(NSString *cueSheet)
 		bom = 0xfeff;
 		num = ('-'? [0-9]+) >sstart %setnum;
 		
-		key = "GENRE" | "DATE" | "DISCID" | "COMMENT" | "PERFORMER" | "TITLE"  | "SONGWRITER" | "FILE" | "PREGAP" | "POSTGAP" | ("REPLAYGAIN" nonws*);
+		key = "GENRE" | "DATE" | "DISCID" | "COMMENT" | "PERFORMER" | "TITLE"  | "SONGWRITER" | "FILE" | "PREGAP" | "POSTGAP" | "CATALOG" | ("REPLAYGAIN" nonws*);
 		value = (("\"" [^\"]* "\"") | ((any - (nl|"\""))+));
 		topsetting = key >sstart %setkey ws value >sstart %addval (ws? str)?;
 		toplevel = (ws? "REM"? ws? topsetting :> nl)*;

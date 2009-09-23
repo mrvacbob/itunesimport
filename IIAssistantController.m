@@ -31,7 +31,6 @@
             [nextButton setEnabled:YES];
 			break;
 		case 3:
-            [consoleView setFont:[NSFont fontWithName:@"Monaco" size:10]];
             [self importIntoiTunes];
 	}
 }
@@ -45,6 +44,7 @@
 	[albumTrackTable setColumnAutoresizingStyle:NSTableViewReverseSequentialColumnAutoresizingStyle];
     imageNameArray = [[NSMutableArray alloc] init];
     imageArray = [[NSMutableArray alloc] init];
+    [consoleView setFont:[NSFont fontWithName:@"Monaco" size:10]];
 }
 
 #pragma mark -- Album Choice
@@ -243,10 +243,10 @@
 		[ittracks addObject:nt];
 		
         do(nt.album = albumTags->title);
-		if ([tr->artist length] && [albumTags->artist length]) {
+        if (albumTags->hasAlbumArtist)
             do(nt.albumArtist = albumTags->artist);
-            do(nt.artist = tr->artist);
-		} else do(nt.artist = [tr->artist length]?tr->artist:albumTags->artist);
+
+		do(nt.artist = [tr->artist length]?tr->artist:albumTags->artist);
 		
 		if ([tr->comment length]) do(nt.comment = tr->comment);
 		

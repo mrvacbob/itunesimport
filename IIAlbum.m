@@ -65,6 +65,12 @@ static void CanonicalizeTags(AlbumTags *tags, IIAlbum *album)
 	SamenessFilter(composer);
     
     if (![tags->title length]) tags->title = [[[[album fileSource] fileSourceName] lastPathComponent] retain];
+    
+    for (i = 0; i < count; i++) {
+        TrackTags *tt = [tags->tracks objectAtIndex:i];
+        if ([tt->artist length] && ![tt->artist isEqualToString:tags->artist])
+            tags->hasAlbumArtist = YES;
+    }
 }
 
 @implementation TrackTags
@@ -97,6 +103,7 @@ static void CanonicalizeTags(AlbumTags *tags, IIAlbum *album)
 		title=artist=composer=genre=comment=nil;
 		year=0;
 		tracks=nil;
+        hasAlbumArtist=NO;
 	}
 	
 	return self;
@@ -276,12 +283,15 @@ static void CanonicalizeTags(AlbumTags *tags, IIAlbum *album)
 	set(Songwriter, composer);
 	set(Genre, genre);
 	NSMutableString *com = [NSMutableString string];
+    NSString *date;
 	NSString *discid, *cuecom;
 	discid = [cueDict objectForKey:@"Discid"];
 	cuecom = [cueDict objectForKey:@"Comment"];
+    date   = [cueDict objectForKey:@"Date"];
 
 	if (discid) {[com appendFormat:@"%@\n", discid];}
 	if (cuecom) [com appendString:cuecom];
+    if (date && !tags->year) tags->year = [[NSCalendarDate dateWithNaturalLanguageString:date] yearOfCommonEra];
 	
 	tags->comment = [com retain];
 	
