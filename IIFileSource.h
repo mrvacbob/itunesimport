@@ -16,7 +16,7 @@
 - (NSString*)pathToFile:(NSString*)filename;
 - (NSData*)dataFromFile:(NSString*)path;
 - (BOOL)isValid;
-- (BOOL)containsFile:(NSString*)path;
+- (BOOL)containsFile:(NSString*)path ignoringExtension:(BOOL)ignoringExtension;
 - (NSString*)fileSourceName;
 @end
 

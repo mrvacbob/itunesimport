@@ -10,7 +10,7 @@
 #import "Utilities.h"
 #import <sys/stat.h>
 
-static NSArray *FilterExtensions(NSArray *files, NSString *ext, BOOL topLevel)
+static NSArray *FilterExtensions(NSArray *files, NSString *template, BOOL topLevel, BOOL checkBaseName)
 {
 	NSMutableIndexSet *is = [NSMutableIndexSet indexSet];
 	
@@ -19,7 +19,7 @@ static NSArray *FilterExtensions(NSArray *files, NSString *ext, BOOL topLevel)
 	for (i = 0; i < count; i++) {
 		NSString *fn = [files objectAtIndex:i];
 		if (topLevel && [fn rangeOfString:@"/"].length > 0) continue;
-		if (ext && ![fn hasSuffix:ext]) continue;
+		if (template && (checkBaseName ? ![fn hasPrefix:template] : ![fn hasSuffix:template])) continue;
 		
 		[is addIndex:i];
 	}
@@ -36,13 +36,13 @@ static NSArray *FilterExtensions(NSArray *files, NSString *ext, BOOL topLevel)
 -(NSString*)pathToFile:(NSString*)filename {return nil;}
 -(NSData*)dataFromFile:(NSString*)path {return nil;}
 -(BOOL) isValid {return NO;}
--(BOOL)containsFile:(NSString*)path {return NO;}
+-(BOOL)containsFile:(NSString*)path ignoringExtension:(BOOL)ignoringExtension {return NO;}
 -(NSString*)fileSourceName {return nil;}
 @end
 
 @interface IIFSFileSource : IIFileSource {
 	NSString *baseName;
-	NSArray *allSubpaths, *contents;
+	NSArray *allSubpaths, *topLevelContents;
 }
 @end
 
@@ -59,7 +59,11 @@ static NSArray *FilterExtensions(NSArray *files, NSString *ext, BOOL topLevel)
 {
 	if (self = [super init]) {
 		baseName = [file retain];
-		allSubpaths = contents = nil;
+        
+        NSFileManager *manager = [NSFileManager defaultManager];
+
+        allSubpaths = [[manager subpathsOfDirectoryAtPath:baseName error:nil] retain];
+        topLevelContents = [[manager contentsOfDirectoryAtPath:baseName error:nil] retain];
 	}
 	
 	return self;
@@ -69,7 +73,7 @@ static NSArray *FilterExtensions(NSArray *files, NSString *ext, BOOL topLevel)
 {
 	[baseName release];
 	[allSubpaths release];
-	[contents release];
+	[topLevelContents release];
 	[super dealloc];
 }
 
@@ -81,17 +85,19 @@ static NSArray *FilterExtensions(NSArray *files, NSString *ext, BOOL topLevel)
 }
 
 -(NSArray*)filesWithExtension:(NSString*)extension atTopLevel:(BOOL)topLevel
-{
-	NSFileManager *manager = [NSFileManager defaultManager];
-	
-	return FilterExtensions(topLevel ? (contents ? contents : (contents = [[manager contentsOfDirectoryAtPath:baseName error:nil] retain])) : (allSubpaths ? allSubpaths : (allSubpaths = [[manager subpathsOfDirectoryAtPath:baseName error:nil] retain])), extension, NO);
+{	
+	return FilterExtensions(topLevel ? topLevelContents : allSubpaths, extension, NO, NO);
 }
 
--(BOOL)containsFile:(NSString*)path
+-(BOOL)containsFile:(NSString*)filename ignoringExtension:(BOOL)ignoringExtension
 {
-	struct stat st;
-	
-	return stat([[baseName stringByAppendingPathComponent:path] UTF8String], &st) != -1;
+    if (ignoringExtension) {
+        return [FilterExtensions(topLevelContents, filename, NO, YES) count] > 0;
+    } else {
+        NSFileManager *manager = [NSFileManager defaultManager];
+        
+        return [manager fileExistsAtPath:[baseName stringByAppendingPathComponent:filename]];
+    }
 }
 
 -(NSString*)pathToFile:(NSString*)filename
@@ -144,12 +150,16 @@ static NSArray *FilterExtensions(NSArray *files, NSString *ext, BOOL topLevel)
 
 -(NSArray*)filesWithExtension:(NSString*)extension atTopLevel:(BOOL)topLevel
 {
-	return FilterExtensions([xad allEntryNames], extension, topLevel);
+	return FilterExtensions(archiveNames, extension, topLevel, NO);
 }
 
--(BOOL)containsFile:(NSString*)path
+-(BOOL)containsFile:(NSString*)filename ignoringExtension:(BOOL)ignoringExtension
 {
-	return [archiveNames containsObject:path];
+    if (ignoringExtension) {
+        return [FilterExtensions(archiveNames, filename, YES, YES) count] > 0;
+    } else {
+        return [archiveNames containsObject:filename];
+    }
 }
 
 -(NSString*)pathToFile:(NSString*)filename

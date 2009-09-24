@@ -264,7 +264,7 @@ static void CanonicalizeTags(AlbumTags *tags, IIAlbum *album)
 		NSDictionary *dict = ParseCuesheet(STGetStringWithUnknownEncodingFromData([fileSource dataFromFile:cueName], NULL));
 		NSString *cueWav = [dict objectForKey:@"File"];
         
-		if (!cueWav || ![fileSource containsFile:cueWav] || ![dict objectForKey:@"Tracks"]) continue;
+		if (!cueWav || ![fileSource containsFile:cueWav ignoringExtension:YES] || ![dict objectForKey:@"Tracks"]) continue;
 		unsigned thisTagCount = CountCuesheetTags(dict);
 		if (thisTagCount > bestTagCount) {best = dict; bestTagCount = thisTagCount;}
 	}
