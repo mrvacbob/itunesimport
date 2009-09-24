@@ -336,7 +336,7 @@ enum {
 
 IIAlbum *GetAlbumForFileSource(IIFileSource *fs)
 {
-	static NSString * const extList[] = {@".cue", @".mp3", @".ogg", @".m4a", @".flac", @".ape", @".tta", @".wv"};
+	static NSString * const extList[] = {@".cue", @".mp3", @".ogg", @".m4a", @".flac", @".ape", @".tta", @".wv", @".tak"};
 	const unsigned exts = sizeof(extList)/sizeof(NSString*);
 	unsigned extCount[exts], i;
 	
