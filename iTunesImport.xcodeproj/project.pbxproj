@@ -338,6 +338,7 @@
 				GCC_PREFIX_HEADER = iTunesImport_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PRODUCT_NAME = iTunesImport;
 				WRAPPER_EXTENSION = app;
 			};
@@ -361,6 +362,7 @@
 				GCC_PREFIX_HEADER = iTunesImport_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PRODUCT_NAME = iTunesImport;
 				WRAPPER_EXTENSION = app;
 			};
