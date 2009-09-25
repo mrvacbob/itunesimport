@@ -18,6 +18,7 @@
 		3D0DCBBF0DDF5E4800A1660D /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D0DCBBE0DDF5E4800A1660D /* QuickTime.framework */; };
 		3D0E83AA0D5ACBC300789FCD /* TagParsing.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3D0E83A90D5ACBC300789FCD /* TagParsing.mm */; };
 		3D2266C2105DEF770031B730 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3D2266C0105DEF770031B730 /* MainMenu.xib */; };
+		3D2A1906106C59180003C142 /* IITemporaryFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2A1905106C59180003C142 /* IITemporaryFile.m */; };
 		3D2ACB710EC0EB9D00D0D43A /* UniversalDetector.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D2ACB700EC0EB9D00D0D43A /* UniversalDetector.framework */; };
 		3D2ACB750EC0EBAF00D0D43A /* XADMaster.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D2ACB740EC0EBAF00D0D43A /* XADMaster.framework */; };
 		3D2ACBBA0EC0EE2900D0D43A /* XADMaster.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3D2ACB740EC0EBAF00D0D43A /* XADMaster.framework */; };
@@ -87,6 +88,8 @@
 		3D0E83A80D5ACBC300789FCD /* TagParsing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagParsing.h; sourceTree = "<group>"; };
 		3D0E83A90D5ACBC300789FCD /* TagParsing.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TagParsing.mm; sourceTree = "<group>"; };
 		3D2266C1105DEF770031B730 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		3D2A1904106C59180003C142 /* IITemporaryFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IITemporaryFile.h; sourceTree = "<group>"; };
+		3D2A1905106C59180003C142 /* IITemporaryFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IITemporaryFile.m; sourceTree = "<group>"; };
 		3D2ACB700EC0EB9D00D0D43A /* UniversalDetector.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UniversalDetector.framework; path = "/Applications/The Unarchiver.app/Contents/Frameworks/UniversalDetector.framework"; sourceTree = "<absolute>"; };
 		3D2ACB740EC0EBAF00D0D43A /* XADMaster.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XADMaster.framework; path = "/Applications/The Unarchiver.app/Contents/Frameworks/XADMaster.framework"; sourceTree = "<absolute>"; };
 		3D4A8FF30D5590F80099E796 /* CueParsing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CueParsing.h; sourceTree = "<group>"; };
@@ -136,6 +139,8 @@
 				3D0E83A90D5ACBC300789FCD /* TagParsing.mm */,
 				3DA221790EA6D62D006443F6 /* TUEncodingPopUp.h */,
 				3DA2217A0EA6D62D006443F6 /* TUEncodingPopUp.m */,
+				3D2A1904106C59180003C142 /* IITemporaryFile.h */,
+				3D2A1905106C59180003C142 /* IITemporaryFile.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -286,6 +291,7 @@
 				3D0DCAFF0DDEA46000A1660D /* IICueRenderer.m in Sources */,
 				3D0DCB390DDEB7DA00A1660D /* QuickTimeUtils.c in Sources */,
 				3DA2217B0EA6D62D006443F6 /* TUEncodingPopUp.m in Sources */,
+				3D2A1906106C59180003C142 /* IITemporaryFile.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

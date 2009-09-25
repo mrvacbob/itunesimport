@@ -6,6 +6,7 @@
 //
 
 #import "IICueRenderer.h"
+#import "IITemporaryFile.h"
 #import "QuickTimeUtils.h"
 
 static AudioStreamBasicDescription CDASBD = {
@@ -118,7 +119,6 @@ static void WriteWavTo(NSString *path, short *buf, UInt32 len)
 		SetMovieTimeScale(movie, asbd.mSampleRate);
 		length = GetMovieExtractionDuration(movie) * asbd.mSampleRate;
 		tracks = [tracks_ retain];
-		temporaryFilePaths = [[NSMutableArray alloc] init];
 		
 		//NSLog(@"length = %f s %u samples", GetMovieExtractionDuration(movie), length);
 	}
@@ -130,15 +130,7 @@ static void WriteWavTo(NSString *path, short *buf, UInt32 len)
 {
 	MovieAudioExtractionEnd(aeref);
 	DisposeMovie(movie);
-	[tracks release];
-	
-	NSFileManager *manager = [NSFileManager defaultManager];
-	
-	for (NSString *path in temporaryFilePaths) { //xxx temporary
-		[manager removeItemAtPath:path error:nil];
-	}
-	
-	[temporaryFilePaths release];
+	[tracks release];	
 	
 	[super dealloc];
 }
@@ -176,7 +168,7 @@ static void WriteWavTo(NSString *path, short *buf, UInt32 len)
 	NSString *tempPath;
 		
 	GetTrackStartLen(tracks, length, track, &trackStart, &trackLen);
-	tempPath = [NSString stringWithFormat:@"%@/track%d.wav", NSTemporaryDirectory(), track];
+	tempPath = [[IITemporaryFile temporaryFileWithName:[NSString stringWithFormat:@"track%d.wav", track]] path];
 	
 	short *buf = malloc(trackLen * sizeof(SInt16) * 2);
 
@@ -187,8 +179,6 @@ static void WriteWavTo(NSString *path, short *buf, UInt32 len)
 	WriteWavTo(tempPath, buf, len);
 	
 	free(buf);
-	
-	[temporaryFilePaths addObject:tempPath];
 	
 	return tempPath;
 }

@@ -10,7 +10,6 @@
 
 
 @interface IICueRenderer : NSObject {
-	NSMutableArray *temporaryFilePaths;
 	NSArray *tracks;
 }
 
