@@ -9,7 +9,7 @@
 #import "TagParsing.h"
 #import "CueParsing.h"
 #import "Utilities.h"
-#import "IICueRenderer.h"
+#import "IIWavRenderer.h"
 
 static NSInteger TrackOrderComparison(id a_, id b_, void *context)
 {
@@ -185,7 +185,8 @@ static void CanonicalizeTags(AlbumTags *tags, IIAlbum *album)
 
 @interface IICuesheetAlbum : IIAlbum {
 	NSDictionary *cueDict;
-	IICueRenderer *cueRenderer;
+    NSArray *tracks;
+	IIWavRenderer *cueRenderer;
 }
 
 - (void)findBestCuesheet;
@@ -238,6 +239,7 @@ static void CanonicalizeTags(AlbumTags *tags, IIAlbum *album)
 		fileSource = [fs retain];
 		fileNames = [[fs filesWithExtension:@".cue" atTopLevel:YES] retain];
 		[self findBestCuesheet];
+        tracks = [cueDict objectForKey:@"Tracks"];
 		cueRenderer = nil;
 	}
 	
@@ -323,9 +325,17 @@ static void CanonicalizeTags(AlbumTags *tags, IIAlbum *album)
 - (BOOL)shouldReencode {return YES;}
 
 - (NSString*)pathToTrackWithID:(int)track {
-	if (!cueRenderer) cueRenderer = IICueRendererForCuesheetWav(cueDict, fileSource);
+	if (!cueRenderer) {
+        NSString *cueAudioPath = [fileSource pathToFile:[cueDict objectForKey:@"File"]];
+        cueRenderer = GetRendererForAudioFile(cueAudioPath);
+    }
 	
-	return [cueRenderer pathForTrackWithID:track];
+    NSString *trackWavName = [NSString stringWithFormat:@"track%d.wav", track];
+    UInt32 start, len;
+    
+    GetTrackStartLen(tracks, [cueRenderer samples], track, &start, &len);
+    
+	return [cueRenderer pathForWavWithName:trackWavName fromSample:start length:len];
 }
 @end
 

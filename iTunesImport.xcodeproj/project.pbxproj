@@ -13,7 +13,7 @@
 		3D0B14A90D4ADB3200ECEFBC /* IIAssistantController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D0B14A80D4ADB3200ECEFBC /* IIAssistantController.m */; };
 		3D0B14E80D4AE84700ECEFBC /* Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D0B14E70D4AE84700ECEFBC /* Utilities.m */; };
 		3D0B154F0D4B0B0A00ECEFBC /* IIFileSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D0B154E0D4B0B0A00ECEFBC /* IIFileSource.m */; };
-		3D0DCAFF0DDEA46000A1660D /* IICueRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D0DCAFE0DDEA46000A1660D /* IICueRenderer.m */; };
+		3D0DCAFF0DDEA46000A1660D /* IIWavRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D0DCAFE0DDEA46000A1660D /* IIWavRenderer.m */; };
 		3D0DCB390DDEB7DA00A1660D /* QuickTimeUtils.c in Sources */ = {isa = PBXBuildFile; fileRef = 3D0DCB370DDEB7DA00A1660D /* QuickTimeUtils.c */; };
 		3D0DCBBF0DDF5E4800A1660D /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D0DCBBE0DDF5E4800A1660D /* QuickTime.framework */; };
 		3D0E83AA0D5ACBC300789FCD /* TagParsing.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3D0E83A90D5ACBC300789FCD /* TagParsing.mm */; };
@@ -80,8 +80,8 @@
 		3D0B14E70D4AE84700ECEFBC /* Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utilities.m; sourceTree = "<group>"; };
 		3D0B154D0D4B0B0A00ECEFBC /* IIFileSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IIFileSource.h; sourceTree = "<group>"; };
 		3D0B154E0D4B0B0A00ECEFBC /* IIFileSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IIFileSource.m; sourceTree = "<group>"; };
-		3D0DCAFD0DDEA46000A1660D /* IICueRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IICueRenderer.h; sourceTree = "<group>"; };
-		3D0DCAFE0DDEA46000A1660D /* IICueRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IICueRenderer.m; sourceTree = "<group>"; };
+		3D0DCAFD0DDEA46000A1660D /* IIWavRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IIWavRenderer.h; sourceTree = "<group>"; };
+		3D0DCAFE0DDEA46000A1660D /* IIWavRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IIWavRenderer.m; sourceTree = "<group>"; };
 		3D0DCB370DDEB7DA00A1660D /* QuickTimeUtils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = QuickTimeUtils.c; sourceTree = "<group>"; };
 		3D0DCB380DDEB7DA00A1660D /* QuickTimeUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuickTimeUtils.h; sourceTree = "<group>"; };
 		3D0DCBBE0DDF5E4800A1660D /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = /System/Library/Frameworks/QuickTime.framework; sourceTree = "<absolute>"; };
@@ -133,8 +133,8 @@
 				3D0300C30D516DC400C3B7A3 /* IIAlbum.m */,
 				3D4A8FF30D5590F80099E796 /* CueParsing.h */,
 				3D4A8FF40D5590F80099E796 /* CueParsing.m.rl */,
-				3D0DCAFD0DDEA46000A1660D /* IICueRenderer.h */,
-				3D0DCAFE0DDEA46000A1660D /* IICueRenderer.m */,
+				3D0DCAFD0DDEA46000A1660D /* IIWavRenderer.h */,
+				3D0DCAFE0DDEA46000A1660D /* IIWavRenderer.m */,
 				3D0E83A80D5ACBC300789FCD /* TagParsing.h */,
 				3D0E83A90D5ACBC300789FCD /* TagParsing.mm */,
 				3DA221790EA6D62D006443F6 /* TUEncodingPopUp.h */,
@@ -288,7 +288,7 @@
 				3D0300C40D516DC400C3B7A3 /* IIAlbum.m in Sources */,
 				3D4A904C0D5652A80099E796 /* CueParsing.m.rl in Sources */,
 				3D0E83AA0D5ACBC300789FCD /* TagParsing.mm in Sources */,
-				3D0DCAFF0DDEA46000A1660D /* IICueRenderer.m in Sources */,
+				3D0DCAFF0DDEA46000A1660D /* IIWavRenderer.m in Sources */,
 				3D0DCB390DDEB7DA00A1660D /* QuickTimeUtils.c in Sources */,
 				3DA2217B0EA6D62D006443F6 /* TUEncodingPopUp.m in Sources */,
 				3D2A1906106C59180003C142 /* IITemporaryFile.m in Sources */,

@@ -5,7 +5,7 @@
 //  Created by Alexander Strange on 5/17/08.
 //
 
-#import "IICueRenderer.h"
+#import "IIWavRenderer.h"
 #import "IITemporaryFile.h"
 #import "QuickTimeUtils.h"
 
@@ -26,29 +26,6 @@ static AudioStreamBasicDescription SetCDDAASBD(MovieAudioExtractionRef aeref)
 	MovieAudioExtractionSetProperty(aeref, kQTPropertyClass_MovieAudioExtraction_Audio, kQTMovieAudioExtractionAudioPropertyID_AudioChannelLayout, sizeof(AudioChannelLayout), &layout);
 	MovieAudioExtractionSetProperty(aeref, kQTPropertyClass_MovieAudioExtraction_Audio, kQTMovieAudioExtractionAudioPropertyID_AudioStreamBasicDescription, sizeof(AudioStreamBasicDescription), &CDASBD);
 	return CDASBD;
-}
-
-static UInt32 ParseCuesheetTime(NSString *time)
-{
-	UInt32 m,s,f;
-	sscanf([time UTF8String], "%u:%u:%u", &m, &s, &f);
-	
-	UInt32 res = f * (44100/75) + s * 44100 + m * 44100 * 60;
-	//NSLog(@"%@ -> %u = %f s",time,res, res / 44100.0);
-	return res;
-}
-
-static void GetTrackStartLen(NSArray *tracks, UInt32 albumLen, int track, UInt32 *start, UInt32 *len)
-{
-	NSDictionary *thisTrack = [tracks objectAtIndex:track-1], *nextTrack = (track < [tracks count]) ? [tracks objectAtIndex:track] : nil;
-	NSString *startString = [thisTrack objectForKey:@"Index 01"], *endString = [nextTrack objectForKey:@"Index 01"];
-	UInt32 endTime;
-    
-	*start = ParseCuesheetTime(startString);
-	endTime = endString ? ParseCuesheetTime(endString) : albumLen;
-	*len = endTime - *start;
-	
-    //NSLog(@"track %d start %u len %u samples", track, *start, *len);
 }
 
 static void WriteWavTo(NSString *path, short *buf, UInt32 len)
@@ -91,12 +68,14 @@ static void WriteWavTo(NSString *path, short *buf, UInt32 len)
 	fclose(f);
 }
 
-@implementation IICueRenderer
-- (id)initWithAlbumPath:(NSString*)path tracks:(NSArray*)tracks {return nil;}
-- (NSString*)pathForTrackWithID:(int)track {return nil;}
+@implementation IIWavRenderer
+- (id)initWithAudioFile:(NSString*)path {return nil;}
+- (unsigned)samples {return 0;}
+- (NSString*)pathForWavWithName:(NSString*)name {return nil;}
+- (NSString*)pathForWavWithName:(NSString*)name fromSample:(unsigned)startSample length:(unsigned)length {return nil;}
 @end
 
-@interface IIQTCueRenderer : IICueRenderer
+@interface IIQTWavRenderer : IIWavRenderer
 {
 	MovieAudioExtractionRef aeref;
     Movie movie;
@@ -106,10 +85,11 @@ static void WriteWavTo(NSString *path, short *buf, UInt32 len)
 }
 @end
 
-@implementation IIQTCueRenderer
-- (id)initWithAlbumPath:(NSString*)path tracks:(NSArray*)tracks_
+@implementation IIQTWavRenderer
+
+- (id)initWithAudioFile:(NSString*)path
 {
-	if (self = [super init]) {
+    if (self = [super init]) {
 		InitializeQuickTime();
 		GetMovieFromCFStringRef((CFStringRef)path, &movie);
 		SetMovieActive(movie, YES);
@@ -118,21 +98,27 @@ static void WriteWavTo(NSString *path, short *buf, UInt32 len)
 		asbd = SetCDDAASBD(aeref);
 		SetMovieTimeScale(movie, asbd.mSampleRate);
 		length = GetMovieExtractionDuration(movie) * asbd.mSampleRate;
-		tracks = [tracks_ retain];
-		
-		//NSLog(@"length = %f s %u samples", GetMovieExtractionDuration(movie), length);
-	}
-	
-	return self;
+        
+        //tracks = [tracks_ retain];
+        
+        //NSLog(@"length = %f s %u samples", GetMovieExtractionDuration(movie), length);
+    }
+    
+    return self;
 }
 
 -(void)dealloc
 {
 	MovieAudioExtractionEnd(aeref);
 	DisposeMovie(movie);
-	[tracks release];	
+	//[tracks release];	
 	
 	[super dealloc];
+}
+
+- (unsigned)samples
+{
+    return length;
 }
 
 - (UInt32) decompressFrom:(UInt32)from into:(short*)buf length:(UInt32)len
@@ -162,29 +148,33 @@ static void WriteWavTo(NSString *path, short *buf, UInt32 len)
 	return realLen;
 }
 
-- (NSString*)pathForTrackWithID:(int)track
+- (NSString*)pathForWavWithName:(NSString*)name fromSample:(unsigned)startSample length:(unsigned)wavLen
 {
-	UInt32 trackStart, trackLen;
-	NSString *tempPath;
-		
-	GetTrackStartLen(tracks, length, track, &trackStart, &trackLen);
-	tempPath = [[IITemporaryFile temporaryFileWithName:[NSString stringWithFormat:@"track%d.wav", track]] path];
-	
-	short *buf = malloc(trackLen * sizeof(SInt16) * 2);
+    SInt16 *buf = malloc(wavLen * sizeof(SInt16) * 2);
+    
+    UInt32 decompLen = [self decompressFrom:startSample into:buf length:wavLen];
+    
+    if (decompLen != wavLen)
+        NSLog(@"decompression length mismatch: wanted %u got %u", wavLen, (unsigned)decompLen);
+    
+    // XXX not GC safe
+    NSString *tempPath = [[IITemporaryFile temporaryFileWithName:name] path];
+    
+    WriteWavTo(tempPath, buf, MIN(decompLen, wavLen));
+    
+    free(buf);
+    
+    return tempPath;
 
-	UInt32 len = [self decompressFrom:trackStart into:buf length:trackLen];
-	
-	//NSLog(@"requested %d samples got %d samples",trackLen,len);
-	
-	WriteWavTo(tempPath, buf, len);
-	
-	free(buf);
-	
-	return tempPath;
+}
+
+- (NSString*)pathForWavWithName:(NSString*)name 
+{
+    return [self pathForWavWithName:name fromSample:0 length:length];
 }
 @end
 
-IICueRenderer *IICueRendererForCuesheetWav(NSDictionary *cuesheet, IIFileSource *fileSource)
+IIWavRenderer *GetRendererForAudioFile(NSString *path)
 {
-	return [[IIQTCueRenderer alloc] initWithAlbumPath:[fileSource pathToFile:[cuesheet objectForKey:@"File"]] tracks:[cuesheet objectForKey:@"Tracks"]];
-} 
+    return [[IIQTWavRenderer alloc] initWithAudioFile:path];
+}

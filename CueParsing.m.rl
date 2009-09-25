@@ -12,6 +12,35 @@
 %%machine Cuesheet;
 %%write data;
 
+UInt32 ParseCuesheetTime(NSString *time)
+{
+	unsigned m,s,f;
+	sscanf([time UTF8String], "%u:%u:%u", &m, &s, &f);
+	
+	UInt32 res = f * (44100/75) + s * 44100 + m * 44100 * 60;
+	//NSLog(@"%@ -> %u = %f s",time,res, res / 44100.0);
+	return res;
+}
+
+void GetTrackStartLen(NSArray *tracks, UInt32 albumLen, int track, UInt32 *start, UInt32 *len)
+{
+	NSDictionary *thisTrack = [tracks objectAtIndex:track-1], *nextTrack = (track < [tracks count]) ? [tracks objectAtIndex:track] : nil;
+	NSString *startString = [thisTrack objectForKey:@"Index 01"], *endString = [nextTrack objectForKey:@"Index 01"];
+	UInt32 endTime;
+    
+	*start = ParseCuesheetTime(startString);
+	endTime = endString ? ParseCuesheetTime(endString) : albumLen;
+	*len = endTime - *start;
+	
+    //NSLog(@"track %d start %u len %u samples", track, *start, *len);
+    
+    if (endTime < *start) {
+        NSLog(@"impossible end time!");
+        endTime = *start;
+    }
+    
+}
+
 unsigned CountCuesheetTags(NSDictionary *cue)
 {
 	unsigned tags = 0;
