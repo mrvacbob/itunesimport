@@ -16,8 +16,6 @@ Not working
 - Needs an option to guess tags from file names.
 - Needs an option to manually choose the charset (which is frequently misguessed)
 - taglib is too opaque when we want raw bytes; ditch it for libavformat or something.
-- It can't reencode an album with individual tracks.
 - Can't import album art, because iTunes' API is broken.
 - Can't delete temporary WAV files in the library for some reason.
 - The program has to be restarted after it's done.
-- No progress information.
