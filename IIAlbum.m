@@ -73,6 +73,39 @@ static void CanonicalizeTags(AlbumTags *tags, IIAlbum *album)
     }
 }
 
+
+enum {
+	kCueIndex = 0,
+	kLastLossyIndex = 3,
+    kLastAcceptedIndex = 5
+};
+
+static NSString * const knownExts[] = {@".cue", @".mp3", @".ogg", @".m4a", @".wav", @".aiff", @".flac", @".ape", @".tta", @".wv", @".tak"};
+
+static BOOL isExtLossless(NSString *path)
+{
+    int i;
+    
+    for (i = 0; i < sizeof(knownExts)/sizeof(knownExts[0]); i++) {
+        if ([path hasSuffix:knownExts[i]])
+            return i > kLastLossyIndex;
+    }
+    
+    return NO;
+}
+
+static BOOL isExtAcceptedByITunes(NSString *path)
+{
+    int i;
+    
+    for (i = 0; i < sizeof(knownExts)/sizeof(knownExts[0]); i++) {
+        if ([path hasSuffix:knownExts[i]])
+            return i <= kLastAcceptedIndex;
+    }
+    
+    return YES;
+}
+
 @implementation TrackTags
 -(id) init
 {
@@ -176,10 +209,10 @@ static void CanonicalizeTags(AlbumTags *tags, IIAlbum *album)
 @end
 
 @interface IIPrerippedAlbum : IIAlbum {
-	BOOL unicode, lossless;
+	BOOL unicode, lossless, accepted;
 }
 
-- (id)initWithFileSource:(IIFileSource *)fs extension:(NSString *)ext lossless:(BOOL)lossless;
+- (id)initWithFileSource:(IIFileSource *)fs extension:(NSString *)ext;
 - (void)getAlbumTags;
 @end
 
@@ -193,13 +226,14 @@ static void CanonicalizeTags(AlbumTags *tags, IIAlbum *album)
 @end
 
 @implementation IIPrerippedAlbum
-- (id)initWithFileSource:(IIFileSource *)fs extension:(NSString *)ext lossless:(BOOL)lossless_
+- (id)initWithFileSource:(IIFileSource *)fs extension:(NSString *)ext
 {
 	if (self = [super init]) {
 		fileSource = [fs retain];
 		fileNames = [[fs filesWithExtension:ext atTopLevel:YES] retain];
-		unicode = ![ext isEqualToString:@".mp3"];
-        lossless = lossless_;
+		unicode = ![ext isEqualToString:@".mp3"]; // xxx eh
+        lossless = isExtLossless(ext);
+        accepted = isExtAcceptedByITunes(ext);
 		[self getAlbumTags];
 	}
 	
@@ -228,7 +262,16 @@ static void CanonicalizeTags(AlbumTags *tags, IIAlbum *album)
 - (BOOL)shouldReencode {return lossless;}
 
 - (NSString*)pathToTrackWithID:(int)track {
-    return [fileSource pathToFile:[fileNames objectAtIndex:track]];
+    NSString *path = [fileSource pathToFile:[fileNames objectAtIndex:track]];
+    
+    if (!accepted) {
+        IIWavRenderer *renderer = GetRendererForAudioFile(path);
+        NSString *trackWavName = [NSString stringWithFormat:@"track%d.wav", track];
+        
+        path = [renderer pathForWavWithName:trackWavName];
+    }
+    
+    return path;
 }
 @end
 
@@ -327,7 +370,7 @@ static void CanonicalizeTags(AlbumTags *tags, IIAlbum *album)
 - (NSString*)pathToTrackWithID:(int)track {
 	if (!cueRenderer) {
         NSString *cueAudioPath = [fileSource pathToFile:[cueDict objectForKey:@"File"]];
-        cueRenderer = GetRendererForAudioFile(cueAudioPath);
+        cueRenderer = [GetRendererForAudioFile(cueAudioPath) retain];
     }
 	
     NSString *trackWavName = [NSString stringWithFormat:@"track%d.wav", track];
@@ -339,21 +382,15 @@ static void CanonicalizeTags(AlbumTags *tags, IIAlbum *album)
 }
 @end
 
-enum {
-	kCueIndex = 0,
-	kLastLossyIndex = 3
-};
-
 IIAlbum *GetAlbumForFileSource(IIFileSource *fs)
 {
-	static NSString * const extList[] = {@".cue", @".mp3", @".ogg", @".m4a", @".flac", @".ape", @".tta", @".wv", @".tak"};
-	const unsigned exts = sizeof(extList)/sizeof(NSString*);
+	const unsigned exts = sizeof(knownExts)/sizeof(NSString*);
 	unsigned extCount[exts], i;
 	
 	bzero(extCount, sizeof(extCount));
 
-	for (i = 0; i < sizeof(extList)/sizeof(NSString*); i++) {
-		extCount[i] = [[fs filesWithExtension:extList[i] atTopLevel:YES] count];
+	for (i = 0; i < sizeof(knownExts)/sizeof(NSString*); i++) {
+		extCount[i] = [[fs filesWithExtension:knownExts[i] atTopLevel:YES] count];
 	}
 	
 	if (extCount[kCueIndex] > 0) {
@@ -365,7 +402,7 @@ IIAlbum *GetAlbumForFileSource(IIFileSource *fs)
 	for (i = 1; i < exts; i++) {
 		if (extCount[i] == 0) continue;
 		
-		IIPrerippedAlbum *album = [[[IIPrerippedAlbum alloc] initWithFileSource:fs extension:extList[i] lossless:(i > kLastLossyIndex)] autorelease];
+		IIPrerippedAlbum *album = [[[IIPrerippedAlbum alloc] initWithFileSource:fs extension:knownExts[i]] autorelease];
 		
 		return album;
 	}

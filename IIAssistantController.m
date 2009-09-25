@@ -238,6 +238,7 @@
 		iTunesTrack *nt = [iTunes add:[NSArray arrayWithObject:[NSURL fileURLWithPath:path isDirectory:NO]] to:nil];
 		if (!nt) {
             [self appendLineToConsole:[NSString stringWithFormat:@"iTunes didn't want to add \"%@\"", path]];
+            // here it should try reencode...
 			continue;
 		}
 		[ittracks addObject:nt];

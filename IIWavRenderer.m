@@ -176,5 +176,5 @@ static void WriteWavTo(NSString *path, short *buf, UInt32 len)
 
 IIWavRenderer *GetRendererForAudioFile(NSString *path)
 {
-    return [[IIQTWavRenderer alloc] initWithAudioFile:path];
+    return [[[IIQTWavRenderer alloc] initWithAudioFile:path] autorelease];
 }
