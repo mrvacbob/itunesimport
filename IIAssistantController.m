@@ -261,8 +261,8 @@
         if (tr->year) do(nt.year = tr->year);
 		        
 		if (artwork) {
-			// iTunesArtwork *art = [[nt artworks] objectAtIndex:0];
-			//  art.data = artwork;
+            iTunesArtwork *art = [[nt artworks] objectAtIndex:0];
+            art.data = artwork;
 		}
     }
     
