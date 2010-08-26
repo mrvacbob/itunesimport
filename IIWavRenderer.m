@@ -92,6 +92,10 @@ static void WriteWavTo(NSString *path, short *buf, UInt32 len)
     if (self = [super init]) {
 		InitializeQuickTime();
 		GetMovieFromCFStringRef((CFStringRef)path, &movie);
+        if (!movie) {
+            [self release];
+            return nil;
+        }
 		SetMovieActive(movie, YES);
 		
 		MovieAudioExtractionBegin(movie, 0, &aeref);
