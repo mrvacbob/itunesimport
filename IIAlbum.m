@@ -283,7 +283,6 @@ static BOOL isExtAcceptedByITunes(NSString *path)
 		fileNames = [[fs filesWithExtension:@".cue" atTopLevel:YES] retain];
 		[self findBestCuesheet];
         tracks = [cueDict objectForKey:@"Tracks"];
-		cueRenderer = nil;
 	}
 	
 	return self;
@@ -305,15 +304,39 @@ static BOOL isExtAcceptedByITunes(NSString *path)
 {	
 	NSDictionary *best=nil;
 	unsigned bestTagCount=0;
+    IIWavRenderer *bestRenderer=nil;
+    
 	for (NSString *cueName in fileNames) {
 		NSDictionary *dict = ParseCuesheet(STGetStringWithUnknownEncodingFromData([fileSource dataFromFile:cueName], NULL));
-		NSString *cueWav = [dict objectForKey:@"File"];
         
-		if (!cueWav || ![fileSource containsFile:cueWav ignoringExtension:YES] || ![dict objectForKey:@"Tracks"]) continue;
-		unsigned thisTagCount = CountCuesheetTags(dict);
-		if (thisTagCount > bestTagCount) {best = dict; bestTagCount = thisTagCount;}
+        if (![dict objectForKey:@"Tracks"]) {
+            NSLog(@"no tracks");
+            continue;
+        }
+        NSString *cueWav = [dict objectForKey:@"File"];
+		if (!cueWav) {
+            NSLog(@"no filename");
+            continue;
+        }
+        if (![fileSource containsFile:cueWav ignoringExtension:YES]) {
+            NSLog(@"no audio");
+            continue;
+        }
+        IIWavRenderer *renderer = GetRendererForAudioFile([fileSource pathToFile:cueWav]);
+        if (!renderer) {
+            NSLog(@"QT couldn't open audio");
+            continue;
+        }
+        
+        unsigned thisTagCount = CountCuesheetTags(dict);
+        
+		if (thisTagCount > bestTagCount) {
+            best = dict;
+            bestRenderer = renderer;
+            bestTagCount = thisTagCount;
+        }
 	}
-	
+    cueRenderer = [bestRenderer retain];
 	cueDict = [best retain];
 	
 	tags = [[AlbumTags alloc] init];
@@ -368,14 +391,9 @@ static BOOL isExtAcceptedByITunes(NSString *path)
 - (BOOL)shouldReencode {return YES;}
 
 - (NSString*)pathToTrackWithID:(int)track {
-	if (!cueRenderer) {
-        NSString *cueAudioPath = [fileSource pathToFile:[cueDict objectForKey:@"File"]];
-        cueRenderer = [GetRendererForAudioFile(cueAudioPath) retain];
-    }
-	
     NSString *trackWavName = [NSString stringWithFormat:@"track%d.wav", track];
     UInt32 start, len;
-    
+
     GetTrackStartLen(tracks, [cueRenderer samples], track, &start, &len);
     
 	return [cueRenderer pathForWavWithName:trackWavName fromSample:start length:len];
@@ -392,7 +410,7 @@ IIAlbum *GetAlbumForFileSource(IIFileSource *fs)
 	for (i = 0; i < sizeof(knownExts)/sizeof(NSString*); i++) {
 		extCount[i] = [[fs filesWithExtension:knownExts[i] atTopLevel:YES] count];
 	}
-	
+
 	if (extCount[kCueIndex] > 0) {
 		IICuesheetAlbum *album = [[[IICuesheetAlbum alloc] initWithFileSource:fs] autorelease];
 		
