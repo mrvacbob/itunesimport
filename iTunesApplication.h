@@ -8,38 +8,43 @@
 
 @class iTunesPrintSettings, iTunesApplication, iTunesItem, iTunesArtwork, iTunesEncoder, iTunesEQPreset, iTunesPlaylist, iTunesAudioCDPlaylist, iTunesDevicePlaylist, iTunesLibraryPlaylist, iTunesRadioTunerPlaylist, iTunesSource, iTunesTrack, iTunesAudioCDTrack, iTunesDeviceTrack, iTunesFileTrack, iTunesSharedTrack, iTunesURLTrack, iTunesUserPlaylist, iTunesFolderPlaylist, iTunesVisual, iTunesWindow, iTunesBrowserWindow, iTunesEQWindow, iTunesPlaylistWindow;
 
-typedef enum {
+enum iTunesEKnd {
 	iTunesEKndTrackListing = 'kTrk' /* a basic listing of tracks within a playlist */,
 	iTunesEKndAlbumListing = 'kAlb' /* a listing of a playlist grouped by album */,
 	iTunesEKndCdInsert = 'kCDi' /* a printout of the playlist for jewel case inserts */
-} iTunesEKnd;
+};
+typedef enum iTunesEKnd iTunesEKnd;
 
-typedef enum {
+enum iTunesEnum {
 	iTunesEnumStandard = 'lwst' /* Standard PostScript error handling */,
 	iTunesEnumDetailed = 'lwdt' /* print a detailed report of PostScript errors */
-} iTunesEnum;
+};
+typedef enum iTunesEnum iTunesEnum;
 
-typedef enum {
+enum iTunesEPlS {
 	iTunesEPlSStopped = 'kPSS',
 	iTunesEPlSPlaying = 'kPSP',
 	iTunesEPlSPaused = 'kPSp',
 	iTunesEPlSFastForwarding = 'kPSF',
 	iTunesEPlSRewinding = 'kPSR'
-} iTunesEPlS;
+};
+typedef enum iTunesEPlS iTunesEPlS;
 
-typedef enum {
+enum iTunesERpt {
 	iTunesERptOff = 'kRpO',
 	iTunesERptOne = 'kRp1',
-	iTunesERptAll = 'kRpA'
-} iTunesERpt;
+	iTunesERptAll = 'kAll'
+};
+typedef enum iTunesERpt iTunesERpt;
 
-typedef enum {
+enum iTunesEVSz {
 	iTunesEVSzSmall = 'kVSS',
 	iTunesEVSzMedium = 'kVSM',
 	iTunesEVSzLarge = 'kVSL'
-} iTunesEVSz;
+};
+typedef enum iTunesEVSz iTunesEVSz;
 
-typedef enum {
+enum iTunesESrc {
 	iTunesESrcLibrary = 'kLib',
 	iTunesESrcIPod = 'kPod',
 	iTunesESrcAudioCD = 'kACD',
@@ -48,41 +53,48 @@ typedef enum {
 	iTunesESrcRadioTuner = 'kTun',
 	iTunesESrcSharedLibrary = 'kShd',
 	iTunesESrcUnknown = 'kUnk'
-} iTunesESrc;
+};
+typedef enum iTunesESrc iTunesESrc;
 
-typedef enum {
+enum iTunesESrA {
 	iTunesESrAAlbums = 'kSrL' /* albums only */,
-	iTunesESrAAll = 'kSrA' /* all text fields */,
+	iTunesESrAAll = 'kAll' /* all text fields */,
 	iTunesESrAArtists = 'kSrR' /* artists only */,
 	iTunesESrAComposers = 'kSrC' /* composers only */,
 	iTunesESrADisplayed = 'kSrV' /* visible text fields */,
 	iTunesESrASongs = 'kSrS' /* song names only */
-} iTunesESrA;
+};
+typedef enum iTunesESrA iTunesESrA;
 
-typedef enum {
-	iTunesESpKNone = 'kSpN',
-	iTunesESpKAudiobooks = 'kSpA',
+enum iTunesESpK {
+	iTunesESpKNone = 'kNon',
+	iTunesESpKBooks = 'kSpA',
 	iTunesESpKFolder = 'kSpF',
+	iTunesESpKGenius = 'kSpG',
+	iTunesESpKITunesU = 'kSpU',
+	iTunesESpKLibrary = 'kSpL',
 	iTunesESpKMovies = 'kSpI',
 	iTunesESpKMusic = 'kSpZ',
 	iTunesESpKPartyShuffle = 'kSpS',
 	iTunesESpKPodcasts = 'kSpP',
 	iTunesESpKPurchasedMusic = 'kSpM',
-	iTunesESpKTVShows = 'kSpT',
-	iTunesESpKVideos = 'kSpV'
-} iTunesESpK;
+	iTunesESpKTVShows = 'kSpT'
+};
+typedef enum iTunesESpK iTunesESpK;
 
-typedef enum {
-	iTunesEVdKNone = 'kVdN' /* not a video or unknown video kind */,
+enum iTunesEVdK {
+	iTunesEVdKNone = 'kNon' /* not a video or unknown video kind */,
 	iTunesEVdKMovie = 'kVdM' /* movie track */,
 	iTunesEVdKMusicVideo = 'kVdV' /* music video track */,
 	iTunesEVdKTVShow = 'kVdT' /* TV show track */
-} iTunesEVdK;
+};
+typedef enum iTunesEVdK iTunesEVdK;
 
-typedef enum {
+enum iTunesERtK {
 	iTunesERtKUser = 'kRtU' /* user-specified rating */,
 	iTunesERtKComputed = 'kRtC' /* iTunes-computed rating */
-} iTunesERtK;
+};
+typedef enum iTunesERtK iTunesERtK;
 
 
 
@@ -182,6 +194,7 @@ typedef enum {
 
 @property (copy, readonly) SBObject *container;  // the container of the item
 - (NSInteger) id;  // the id of the item
+@property (readonly) NSInteger index;  // The index of the item in internal application order.
 @property (copy) NSString *name;  // the name of the item
 @property (copy, readonly) NSString *persistentID;  // the id of the item as a hexidecimal string. This id does not change over time.
 
@@ -200,9 +213,11 @@ typedef enum {
 @interface iTunesArtwork : iTunesItem
 
 @property (copy) NSImage *data;  // data for this artwork, in the form of a picture
+@property (copy) NSString *objectDescription;  // description of artwork as a string
 @property (readonly) BOOL downloaded;  // was this artwork downloaded by iTunes?
 @property (copy, readonly) NSNumber *format;  // the data format for this piece of artwork
 @property NSInteger kind;  // kind or purpose of this piece of artwork
+@property (copy) NSData *rawData;  // data for this artwork, in original format
 
 
 @end
@@ -241,7 +256,6 @@ typedef enum {
 - (SBElementArray *) tracks;
 
 @property (readonly) NSInteger duration;  // the total length of all songs (in seconds)
-@property (readonly) NSInteger index;  // the index of the playlist in internal application order
 @property (copy) NSString *name;  // the name of the playlist
 @property (copy, readonly) iTunesPlaylist *parent;  // folder which contains this playlist (if any)
 @property BOOL shuffle;  // play the songs in this playlist in random order?
@@ -358,6 +372,7 @@ typedef enum {
 @property (readonly) BOOL podcast;  // is this track a podcast episode?
 @property NSInteger rating;  // the rating of this track (0 to 100)
 @property (readonly) iTunesERtK ratingKind;  // the rating kind of this track
+@property (copy, readonly) NSDate *releaseDate;  // the release date of this track
 @property (readonly) NSInteger sampleRate;  // the sample rate of the track (in Hz)
 @property NSInteger seasonNumber;  // the season number of the track
 @property BOOL shufflable;  // is this track included when shuffling?
@@ -400,7 +415,7 @@ typedef enum {
 // a track representing an audio file (MP3, AIFF, etc.)
 @interface iTunesFileTrack : iTunesTrack
 
-@property (copy, readonly) NSURL *location;  // the location of the file represented by this track
+@property (copy) NSURL *location;  // the location of the file represented by this track
 
 - (void) refresh;  // update file track information from the current information in the track’s file
 
