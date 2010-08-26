@@ -11,23 +11,38 @@
 #import "Utilities.h"
 #import <sys/stat.h>
 
+// topLevel - ignore files in subfolders
+// checkBaseName -
+// NO  - template is an extension (.wav) and it finds all files with that extension
+// YES - template is a filename and it finds all files with that name. topLevel must be NO
 static NSArray *FilterExtensions(NSArray *files, NSString *template, BOOL topLevel, BOOL checkBaseName)
 {
 	NSMutableIndexSet *is = [NSMutableIndexSet indexSet];
 	
 	unsigned count = [files count], i;
 	
+	if (checkBaseName)
+		template = [template stringByDeletingPathExtension];
+	
 	for (i = 0; i < count; i++) {
 		NSString *fn = [files objectAtIndex:i];
-		if (topLevel && [fn rangeOfString:@"/"].length > 0) continue;
-		if (template && (checkBaseName ? ![fn hasPrefix:template] : ![fn hasSuffix:template])) continue;
+		if (topLevel) 
+            if ([fn rangeOfString:@"/"].length > 0)
+                continue;
+        
+        if (template) {
+            BOOL match = checkBaseName ? [[fn commonPrefixWithString:template options:0] length] : [fn hasSuffix:template];
+            
+            if (!match)
+                continue;
+        }
 		
 		[is addIndex:i];
 	}
 	
 	NSArray *ret = [files objectsAtIndexes:is];
-	//NSLog(@"FE in: %@", files);
-	//NSLog(@"FE for \"%@\": %@", ext, ret);
+//	NSLog(@"FE in: %@", files);
+//	NSLog(@"FE for \"%@\": %@", template, ret);
 	return ret;
 }
 
