@@ -10,7 +10,7 @@
 #import <ScriptingBridge/ScriptingBridge.h>
 #import "IIAlbum.h"
 
-@interface IIAssistantController : NSObject {
+@interface IIAssistantController : NSObject <SBApplicationDelegate> {
 	IBOutlet NSWindow *assistantWindow;
 	IBOutlet NSTabView *assistantTabView;
     IBOutlet NSButton *nextButton;

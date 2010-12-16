@@ -219,18 +219,31 @@
     [self performSelectorOnMainThread:@selector(_appendLineToConsole:) withObject:line waitUntilDone:NO];
 }
 
+- (id)eventDidFail:(const AppleEvent *)event withError:(NSError *)error
+{
+    NSLog(@"failure with error: %@", error);
+    @throw [NSException exceptionWithName:NSGenericException reason:[error description] userInfo:nil];
+}
+
 - (void)iTunesImportThread
 {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     iTunesApplication *iTunes = [SBApplication applicationWithBundleIdentifier:@"com.apple.iTunes"];
     NSMutableArray *ittracks = [NSMutableArray array];
     [progressIndicator performSelectorOnMainThread:@selector(startAnimation:) withObject:self waitUntilDone:NO];
+    SBElementArray *library = [iTunes.sources objectWithName:@"Library"];
+    
+    [iTunes setDelegate:self];
+    [iTunes setTimeout:kNoTimeOut];
     
     BOOL reencode = [album shouldReencode], success;
     //iTunesUserPlaylist *dbgPlaylist = [[[[iTunes sources] objectAtIndex:0] userPlaylists] objectWithName:@"itt"];
     NSImage *artwork = [curImageView image];
     
-#define do(act) do { @try {success=true; act;} @catch (NSException *e) {success = false; NSLog(@"'%s' failed, retrying.", #act); sleep(2);}} while (!success);
+#define do(act) \
+    {NSAutoreleasePool *p2 = [[NSAutoreleasePool alloc] init]; \
+    do { @try {success=true; act;} @catch (NSException *e) {success = false; NSLog(@"'%s' failed, retrying.", #act); sleep(2);}} while (!success); \
+    [p2 release];}
     for (TrackTags *tr in albumTags->tracks) {
         [self appendLineToConsole:[NSString stringWithFormat:@"Importing %d \"%@\"…", tr->num, tr->title]];
 
@@ -262,13 +275,20 @@
 		        
 		if (artwork) {
             iTunesArtwork *art = [[nt artworks] objectAtIndex:0];
-            art.data = artwork;
+            @try {
+                art.data = artwork;
+            } @catch (NSException *e) {
+                NSLog(@"Setting artwork failed: %@", e);
+            }
 		}
     }
     
 	if (reencode) {
         [self appendLineToConsole:@"Converting to AAC…"];
         do([iTunes convert:ittracks]);
+        
+        for (iTunesTrack *t in ittracks) {
+        }
 	}
     
     [self appendLineToConsole:@"Done."];
