@@ -10,25 +10,21 @@
 #import "IIAlbum.h"
 #import <Taglib/fileref.h>
 #import <Taglib/tag.h>
-/*
-static void f()
+
+// the idea of this function seems pretty wrong!
+static BOOL TagLibWillCrash(NSString *name)
 {
-	NSStringEncoding tagEnc = NSUTF8StringEncoding;
-	
-	
-	if (!unicode) {
-		NSMutableData *ud_buffer = [NSMutableData data];
-#define ud(x) if (!x.isEmpty()) [ud_buffer appendBytes:x.to8Bit(unicode).data() length:x.size()]; [ud_buffer appendBytes:"\n" length:1];
-		ud(title); ud(artist); ud(album); ud(genre); ud(com);
-#undef ud	
-		STGetStringWithUnknownEncodingFromData(ud_buffer, &tagEnc);
-	}
-	
+    return [name hasSuffix:@".wav"];
 }
-*/
+
 static NSDictionary *GetRawTrackTags(NSString *track, BOOL unicode)
 {
 	NSDictionary *ret = [NSMutableDictionary dictionary];
+    
+    [ret setValue:track forKey:@"Filename"];
+    
+    if (TagLibWillCrash(track)) return ret;
+    
 	TagLib::FileRef file([track UTF8String]);
 	TagLib::Tag *tag = file.tag();
 	if (!tag || tag->isEmpty()) return ret;
@@ -46,8 +42,6 @@ static NSDictionary *GetRawTrackTags(NSString *track, BOOL unicode)
 	if (tag->year()) [ret setValue:[NSNumber numberWithUnsignedInt:tag->year()] forKey:@"Year"];	
 	if (tag->track()) [ret setValue:[NSNumber numberWithUnsignedInt:tag->track()] forKey:@"Track"];
 	
-	[ret setValue:track forKey:@"Filename"];
-
 	return ret;
 }
 
