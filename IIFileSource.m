@@ -107,8 +107,11 @@ static NSArray *FilterExtensions(NSArray *files, NSString *template, BOOL topLev
 
 -(BOOL)containsFile:(NSString*)filename ignoringExtension:(BOOL)ignoringExtension
 {
+    filename = [filename lastPathComponent];
     if (ignoringExtension) {
-        return [FilterExtensions(topLevelContents, filename, NO, YES) count] > 0;
+        NSArray *filtered = FilterExtensions(topLevelContents, filename, NO, YES);
+        
+        return [filtered count] > 0;
     } else {
         NSFileManager *manager = [NSFileManager defaultManager];
         
