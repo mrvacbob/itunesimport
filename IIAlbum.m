@@ -80,7 +80,7 @@ enum {
     kLastAcceptedIndex = 5
 };
 
-static NSString * const knownExts[] = {@".cue", @".mp3", @".ogg", @".m4a", @".wav", @".aiff", @".flac", @".ape", @".tta", @".wv", @".tak"};
+static NSString * const knownExts[] = {@".cue", @".mp3", @".ogg", @".m4a", @".wav", @".aiff", @".flac", @".tta", @".mka", @".ape", @".wv", @".tak"};
 
 static BOOL isExtLossless(NSString *path)
 {
