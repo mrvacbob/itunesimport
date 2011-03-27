@@ -9,6 +9,7 @@
 #import "IIAlbum.h"
 #import "Utilities.h"
 #import "iTunesApplication.h"
+#import <QTKit/QTKit.h>
 
 @implementation IIAssistantController
 - (IBAction)advance:(id)sender
@@ -45,6 +46,7 @@
     imageNameArray = [[NSMutableArray alloc] init];
     imageArray = [[NSMutableArray alloc] init];
     [consoleView setFont:[NSFont fontWithName:@"Monaco" size:10]];
+    [QTMovie initialize];
 }
 
 #pragma mark -- Album Choice
@@ -143,6 +145,7 @@
 	get(albumComposerField, composer);
 	get(albumGenreField, genre);
     albumTags->year = [albumYearField intValue];
+    
     [album recanonicalizeTags];
 }
 
@@ -231,7 +234,7 @@
     iTunesApplication *iTunes = [SBApplication applicationWithBundleIdentifier:@"com.apple.iTunes"];
     NSMutableArray *ittracks = [NSMutableArray array];
     [progressIndicator performSelectorOnMainThread:@selector(startAnimation:) withObject:self waitUntilDone:NO];
-    SBElementArray *library = [iTunes.sources objectWithName:@"Library"];
+    //SBElementArray *library = [iTunes.sources objectWithName:@"Library"];
     
     [iTunes setDelegate:self];
     [iTunes setTimeout:kNoTimeOut];
@@ -271,7 +274,7 @@
         do(nt.name = tr->title);
         do(nt.trackNumber = tr->num);
         do(nt.trackCount = [albumTags->tracks count]);
-        if (tr->year) do(nt.year = tr->year);
+        do(nt.year = tr->year ? tr->year : albumTags->year);
 		        
 		if (artwork) {
             iTunesArtwork *art = [[nt artworks] objectAtIndex:0];

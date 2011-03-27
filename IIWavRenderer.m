@@ -7,6 +7,7 @@
 
 #import "IIWavRenderer.h"
 #import "IITemporaryFile.h"
+#import <QTKit/QTKit.h>
 #import "QuickTimeUtils.h"
 
 static AudioStreamBasicDescription CDASBD = {
@@ -79,6 +80,7 @@ static void WriteWavTo(NSString *path, short *buf, UInt32 len)
 {
 	MovieAudioExtractionRef aeref;
     Movie movie;
+    QTMovie *qtMovie;
 	UInt32 length;
 	
 	AudioStreamBasicDescription asbd;
@@ -90,9 +92,14 @@ static void WriteWavTo(NSString *path, short *buf, UInt32 len)
 - (id)initWithAudioFile:(NSString*)path
 {
     if (self = [super init]) {
-		InitializeQuickTime();
-		GetMovieFromCFStringRef((CFStringRef)path, &movie);
+        //EnterMoviesOnThread(0);
+
+        NSError *err;
+        qtMovie = [[QTMovie movieWithFile:path error:&err] retain];
+        movie = [qtMovie quickTimeMovie];
+        
         if (!movie) {
+            NSLog(@"error %@ opening movie %@", err, path);
             [self release];
             return nil;
         }
@@ -103,8 +110,6 @@ static void WriteWavTo(NSString *path, short *buf, UInt32 len)
 		SetMovieTimeScale(movie, asbd.mSampleRate);
 		length = GetMovieExtractionDuration(movie) * asbd.mSampleRate;
         
-        //tracks = [tracks_ retain];
-        
         //NSLog(@"length = %f s %u samples", GetMovieExtractionDuration(movie), length);
     }
     
@@ -114,8 +119,7 @@ static void WriteWavTo(NSString *path, short *buf, UInt32 len)
 -(void)dealloc
 {
 	MovieAudioExtractionEnd(aeref);
-	DisposeMovie(movie);
-	//[tracks release];	
+    [qtMovie release];
 	
 	[super dealloc];
 }

@@ -48,66 +48,6 @@
 
 #include "QuickTimeUtils.h"
 
-
-//////////
-//
-// GetMovieFromCFURLRef
-// Instantiate a QuickTime movie for a QuickTime movie file CFURL.
-// 
-//////////
-
-OSErr GetMovieFromCFURLRef(CFURLRef *inURLRef, Movie *outMovieRef)
-{
-	Handle outDataRef;
-	OSType outDataRefType;
-
-	// first create a QuickTime data reference for our CFURL
-	OSErr err = QTNewDataReferenceFromCFURL(*inURLRef,
-                                            0,
-                                            &outDataRef,
-                                            &outDataRefType);
-	require(err == noErr, bail);
-
-	DataReferenceRecord dataRefRecord;
-	Boolean		active = true;
-	
-	dataRefRecord.dataRefType = outDataRefType;
-	dataRefRecord.dataRef = outDataRef;
-	
-    QTNewMoviePropertyElement newMovieProperties[] = 
-    {  
-        {kQTPropertyClass_DataLocation, kQTDataLocationPropertyID_DataReference, sizeof(dataRefRecord), &dataRefRecord, 0},
-            {kQTPropertyClass_NewMovieProperty, kQTNewMoviePropertyID_Active, sizeof(active), &active, 0},
-	};
-
-	// instantiate a QuickTime movie from our CFURL data reference
-    err = NewMovieFromProperties(sizeof(newMovieProperties) / sizeof(newMovieProperties[0]), newMovieProperties, 0, nil, outMovieRef);
-    DisposeHandle(outDataRef);
-
-bail:
-	return err;
-}
-
-OSErr GetMovieFromCFStringRef(CFStringRef inStringRef, Movie *outMovieRef)
-{
-	CFURLRef url = CFURLCreateWithFileSystemPath(NULL, inStringRef, kCFURLPOSIXPathStyle, FALSE);
-	OSErr err = GetMovieFromCFURLRef(&url, outMovieRef);
-	CFRelease(url);
-	return err;
-}
-
-//////////
-//
-// InitializeQuickTime
-// Initializes the Movie Toolbox.
-// 
-//////////
-
-OSErr InitializeQuickTime()
-{
-	return (EnterMovies());
-}
-
 //////////
 //
 // MovieHasSoundTrack
