@@ -108,7 +108,7 @@ static void WriteWavTo(NSString *path, short *buf, UInt32 len)
 		MovieAudioExtractionBegin(movie, 0, &aeref);
 		asbd = SetCDDAASBD(aeref);
 		SetMovieTimeScale(movie, asbd.mSampleRate);
-		length = GetMovieExtractionDuration(movie) * asbd.mSampleRate;
+		length = ceil(GetMovieExtractionDuration(movie) * asbd.mSampleRate);
         
         //NSLog(@"length = %f s %u samples", GetMovieExtractionDuration(movie), length);
     }
